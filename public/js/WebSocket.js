@@ -208,6 +208,8 @@ function startWebSocket(socket,streamName)
         //console.log(currentCloseTime);
         if(currentDate>currentCloseTime)
         {
+            var currentDateMax = currentDate+5000;
+            if(currentDate<=currentDateMax){sessionStorage.setItem('closingPrice',closingPrice);}
             if(counterbuy!==0){counterbuy--;}
             if(countersell!==0){countersell--;}
             if(indexClosingTime===0){loadDataWebSocket();}
@@ -217,7 +219,7 @@ function startWebSocket(socket,streamName)
             console.log('lastBreakPoint '+lastBreakPoint+' lowestATR '+lowestATR);
             console.log('closeTime '+currentCloseTime+' indexClosingTime '+indexClosingTime);
             
-            currentPrice = closingPrice;
+            currentPrice = sessionStorage.getItem('closingPrice');
             if(indexClosingTime===3){currentPrice = lastBreakPoint;}
             console.log('currentPrice '+currentPrice);
             
