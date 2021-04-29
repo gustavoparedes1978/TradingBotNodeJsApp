@@ -33,10 +33,10 @@
 var interval = sessionStorage.getItem('interval');
 var symbol = sessionStorage.getItem('symbol');
 var symbolStream = "btcusdt";
-var streams = ["@kline_"+interval];
-var streamsMessage = "";
-var sockets = [];
-streams.forEach(streamSockets);
+var stream = "@kline_"+interval;
+var streamName = symbolStream+stream;
+let socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
+startWebSocket(socket,streamName);
 
 function loadDataWebSocket()
 {
@@ -169,12 +169,9 @@ var sellOrderOpenMin = 0;
 var sellOrderOpenMax = 0;
 var sellOrderClose = 0;
 
-function streamSockets(value, index, array)
+
+function startWebSocket(socket,streamName)
 {
-    var streamName = symbolStream+streams[index];
-    let socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
-    sockets.push(socket);
-    
     var lowestATR = 0;
     var lastBreakPoint = 0;
     var buyOpenOrderBoolean = true;
@@ -184,10 +181,10 @@ function streamSockets(value, index, array)
     var sellCloseOrderBoolean = false;
     var countersell = 0;
     
-    sockets[sockets.length-1].onopen = function(event) 
+    socket.onopen = function(event) 
     {
-        console.log('socket state onopen '+sockets[sockets.length-1].readyState);
-        var message = "{\"method\": \"SUBSCRIBE\",\"params\": [\""+streamName+"\"],\"id\": \""+index+"}";
+        console.log('socket state onopen '+socket.readyState);
+        var message = "{\"method\": \"SUBSCRIBE\",\"params\": [\""+streamName+"\"],\"id\": \"1\" }";
         if(sockets[sockets.length-1].readyState===0){sockets[sockets.length-1].send(message);}
         lowestATR = sessionStorage.getItem('ATR_SMAs_Array');
         lastBreakPoint =  sessionStorage.getItem('lastBreakPoint');
@@ -196,7 +193,7 @@ function streamSockets(value, index, array)
     
     var indexClosingTime = 3;
     var currentCloseTime = 0;
-    sockets[sockets.length-1].onmessage = function(event) 
+    socket.onmessage = function(event) 
     {
         //console.log('socket state onmessage '+sockets[sockets.length-1].readyState);
         var candle = JSON.parse(event.data);
@@ -249,8 +246,7 @@ function streamSockets(value, index, array)
             console.log('sellOrderClose '+sellOrderClose);
             console.log('division '+div);
             console.log(Math.abs(1 - div));
-            
-            
+                   
             currentCloseTime = candle.k.T - (indexClosingTime)*(7.2e+6);
             currentDate = currentCloseTime;
             indexClosingTime--;
@@ -258,25 +254,23 @@ function streamSockets(value, index, array)
         }
     };
 
-    sockets[sockets.length-1].onclose = function(event) {
-        console.log('socket state onclose '+sockets[sockets.length-1].readyState);
+    socket.onclose = function(event) {
+        console.log('socket state onclose '+socket.readyState);
         if (event.wasClean) {
             console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
         } else {
             console.log('[close] Connection died');
         }
-        streamName = symbolStream+streams[index];
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
-        sockets = [];
-        sockets.push(socket);
+        this.startWebSocket(socket,streamName);
     };
 
-    sockets[sockets.length-1].onerror = function(error) {
-        console.log('socket state onerror '+sockets[sockets.length-1].readyState);
+    socket.onerror = function(error) {
+        console.log('socket state onerror '+socket.readyState);
         console.log(`[error] ${error.message}`);
-        streamName = symbolStream+streams[index];
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
-        sockets = [];
-        sockets.push(socket);
+        this.startWebSocket(socket,streamName);
     };
+    
+    
 }
