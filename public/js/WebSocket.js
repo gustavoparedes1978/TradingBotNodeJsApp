@@ -193,6 +193,7 @@ function startWebSocket(socket,streamName)
     
     var indexClosingTime = 3;
     var currentCloseTime = 0;
+    var readyForTrading = false;
     socket.onmessage = function(event) 
     {
         //console.log('socket state onmessage '+sockets[sockets.length-1].readyState);
@@ -204,8 +205,7 @@ function startWebSocket(socket,streamName)
         if(closingPrice>=buyOrderClose&&buyOrderClose!==0&&buyCloseOrderBoolean){console.log("buy order close "+closingPrice+" "+date);buyOpenOrderBoolean = true;buyCloseOrderBoolean = false;}
         if(closingPrice<=sellOrderOpenMin&&closingPrice>=sellOrderOpenMax&&sellOrderOpenMin!==0&&sellOpenOrderBoolean&&countersell===0){countersell++;console.log("sell order open "+closingPrice+" "+date);sellOpenOrderBoolean = false;sellCloseOrderBoolean = true;}
         if(closingPrice<=sellOrderClose&&sellOrderClose!==0&&sellCloseOrderBoolean){console.log("sell order close "+closingPrice+" "+date);sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;}
-        //console.log(currentDate+' '+candle.k.T+' '+closingPrice);
-        //console.log(currentCloseTime);
+  
         if(currentDate>currentCloseTime)
         {
             var currentDateMax = currentDate+5000;
@@ -219,40 +219,45 @@ function startWebSocket(socket,streamName)
             console.log('lastBreakPoint '+lastBreakPoint+' lowestATR '+lowestATR);
             console.log('closeTime '+currentCloseTime+' indexClosingTime '+indexClosingTime);
             
-            currentPrice = sessionStorage.getItem('closingPrice');
+            currentPrice = closingPrice;
             if(indexClosingTime===3){currentPrice = lastBreakPoint;}
             console.log('currentPrice '+currentPrice);
             
-            buyOrderOpenMin = currentPrice + lowestATR*0.125;
-            buyOrderOpenMax = currentPrice + lowestATR*0.1275;
-            buyOrderClose = currentPrice + lowestATR*0.25;
-            
-            var div = buyOrderOpenMin/buyOrderClose;
-            var diff = buyOrderOpenMax - buyOrderClose;
-            console.log('buyOrderOpenMax - buyOrderClose '+Math.abs(diff));
-            console.log('buyOrderOpenMin '+buyOrderOpenMin);
-            console.log('buyOrderOpenMax '+buyOrderOpenMax);
-            console.log('buyOrderClose '+buyOrderClose);
-            console.log('division '+div);
-            console.log(Math.abs(1 - div));
+            if(readyForTrading)
+            {
+                var div = buyOrderOpenMin/buyOrderClose;
+                var diff = buyOrderOpenMax - buyOrderClose;
+                console.log('buyOrderOpenMax - buyOrderClose '+Math.abs(diff));
+                console.log('buyOrderOpenMin '+buyOrderOpenMin);
+                console.log('buyOrderOpenMax '+buyOrderOpenMax);
+                console.log('buyOrderClose '+buyOrderClose);
+                console.log('division '+div);
+                console.log(Math.abs(1 - div));
+                
+                buyOrderOpenMin = currentPrice + lowestATR*0.125;
+                buyOrderOpenMax = currentPrice + lowestATR*0.1275;
+                buyOrderClose = currentPrice + lowestATR*0.25;
         
-            sellOrderOpenMin = currentPrice - lowestATR*0.125;
-            sellOrderOpenMax = currentPrice - lowestATR*0.1275;
-            sellOrderClose = currentPrice - lowestATR*0.25;
+                sellOrderOpenMin = currentPrice - lowestATR*0.125;
+                sellOrderOpenMax = currentPrice - lowestATR*0.1275;
+                sellOrderClose = currentPrice - lowestATR*0.25;
             
-            div = sellOrderOpenMin/sellOrderClose;
-            var diff = sellOrderOpenMax - sellOrderClose;
-            console.log('sellOrderOpenMax - sellOrderClose '+Math.abs(diff));
-            console.log('sellOrderOpenMin '+sellOrderOpenMin);
-            console.log('sellOrderOpenMax '+sellOrderOpenMax);
-            console.log('sellOrderClose '+sellOrderClose);
-            console.log('division '+div);
-            console.log(Math.abs(1 - div));
-                   
+                div = sellOrderOpenMin/sellOrderClose;
+                var diff = sellOrderOpenMax - sellOrderClose;
+                console.log('sellOrderOpenMax - sellOrderClose '+Math.abs(diff));
+                console.log('sellOrderOpenMin '+sellOrderOpenMin);
+                console.log('sellOrderOpenMax '+sellOrderOpenMax);
+                console.log('sellOrderClose '+sellOrderClose);
+                console.log('division '+div);
+                console.log(Math.abs(1 - div));
+                readyForTrading = true;
+            }
+            
             currentCloseTime = candle.k.T - (indexClosingTime)*(7.2e+6);
             currentDate = currentCloseTime;
             indexClosingTime--;
-            if(indexClosingTime===-1){indexClosingTime = 3;} 
+            if(indexClosingTime===-1){indexClosingTime = 3;}
+        
         }
     };
 
