@@ -1,0 +1,12 @@
+.formElement{
+    padding:4px;
+}
+
+span{
+    display: inline-block;
+    width: 100px;
+}
+
+#settings{
+    padding: 8px;
+}

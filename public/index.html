@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Kagi Chart</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/arpitnarechania/d3-kagi/f66fcce9/dist/kagi.css"/>
+    </head>
+<body>
+    <div id="settings" style="display:inline-block;float:left;">
+        <div class="formElement">
+            <span>Chart Theme</span>
+            <select id="chartTheme" onchange="changeChartTheme(this)">
+              <option value="light" selected>Light</option>
+              <option value="dark">Dark</option>
+            </select>
+        </div>
+        <div class="formElement">
+            <span >Caption</span>
+            <input id="caption"  type="text" value="Apple Stock Closing Prices" onchange="changeCaption(this)">
+        </div>
+        <div class="formElement">
+            <span >Sub caption</span>
+            <input id="subCaption"  type="text" value="2015-01-02 to 2017-02-24" onchange="changeSubCaption(this)">
+        </div>
+        <div class="formElement">
+            <span >Reversal Type</span>
+            <select id="reversalType" onchange="changeReversalType(this)">
+              <option value="diff" selected>Difference</option>
+              <option value="pct">Percentage</option>
+            </select>
+        </div>
+        <div class="formElement">
+            <span >Reversal Value</span>
+            <select id="reversalValue" type="number" onchange="changeReversalValue(this)">
+            </select>
+            <!--<input id="reversalValue" type="number" value="" onchange="changeReversalValue(this)">-->
+        </div>
+        <div class="formElement">
+            <span >Rally Color</span>
+            <input id="rallyColor"  type="color" value="#2ecc71" onchange="changeRallyColor(this)">
+        </div>
+        <div class="formElement">
+            <span >Rally Thickness</span>
+            <input id="rallyThickness" type="number" value="3" onchange="changeRallyThickness(this)">
+        </div>
+        <div class="formElement">
+            <span >Rally Thickness On Hover</span>
+            <input id="rallyThicknessOnHover" type="number" value="5" onchange="changeRallyThicknessOnHover(this)">
+        </div>
+        <div class="formElement">
+            <span >Decline Color</span>
+            <input id="declineColor" type="color" value="#e74c3c" onchange="changeDeclineColor(this)">
+        </div>
+        <div class="formElement">
+            <span >Decline Thickness</span>
+            <input id="declineThickness" type="number" value="2" onchange="changeDeclineThickness(this)">
+        </div>
+        <div class="formElement">
+            <span >Decline Thickness On Hover</span>
+            <input id="declineThicknessOnHover" type="number" value="4" onchange="changeDeclineThicknessOnHover(this)">
+        </div>
+        <div class="formElement">
+            <span >Show Breakpoints</span>
+            <input id="breakPoints" type='checkbox' onclick='showBreakPoints(this);' checked>
+        </div>
+        <div class="formElement">
+            <span >Breakpoints Color</span>
+            <input id="breakPointColor" type="color" value="#3498db" onchange="changeBreakPointColor(this)">
+        </div>
+        <div class="formElement">
+            <span >Breakpoint Radius</span>
+            <input id="breakPointRadius" type="number" value="2" onchange="changeBreakPointRadius(this)">
+        </div>
+        <div class="formElement">
+            <span >Breakpoint Radius On Hover</span>
+            <input id="breakPointRadiusOnHover" type="number" value="5" onchange="changeBreakPointRadiusOnHover(this)">
+        </div>
+        <div class="formElement">
+            <span >Show Breakpoint Text</span>
+            <input id="breakPointText" type='checkbox' onclick='showBreakPointText(this);' checked>
+        </div>
+        <div class="formElement">
+            <span >Show Breakpoint Tooltips</span>
+            <input id="breakPointTooltips" type='checkbox' onclick='showBreakPointTooltip(this);' checked>
+        </div>
+        <div class="formElement">
+            <span >Show Range Tooltips</span>
+            <input id="rangeTooltips" type='checkbox' onclick='showRangePointTooltips(this);' checked>
+        </div>
+        <div class="formElement">
+            <span >Show Legend</span>
+            <input id="legend" type='checkbox' onclick='showLegend(this);' checked>
+        </div>
+        <div class="formElement">
+            <span >Show Animation</span>
+            <input id="animation" type='checkbox' onclick='showAnimation(this);' checked>
+        </div>
+        <div class="formElement">
+            <span >Animation Duration (millis)</span>
+            <input id="animDuration" type="number" value="500" onclick='changeAnimDuration(this);'>
+        </div>
+        <div class="formElement">
+            <span >Animation Ease</span>
+            <select id="animEase" onchange="changeAnimEase(this)">
+              <option value="linear" selected>linear</option>
+              <option value="quadIn">quadIn</option>
+              <option value="quadOut">quadOut</option>
+              <option value="cubicIn">cubicIn</option>
+              <option value="cubicOut">cubicOut</option>
+              <option value="cubicInOut">cubicInOut</option>
+              <option value="polyIn">polyIn</option>
+              <option value="polyOut">polyOut</option>
+              <option value="polyInOut">polyInOut</option>
+              <option value="sinIn">sinIn</option>
+              <option value="sinOut">sinOut</option>
+              <option value="sinInOut">sinInOut</option>
+              <option value="expIn">expIn</option>
+              <option value="expOut">expOut</option>
+              <option value="expInOut">expInOut</option>
+              <option value="circleIn">circleIn</option>
+              <option value="circleOut">circleOut</option>
+              <option value="circleInOut">circleInOut</option>
+              <option value="bounceIn">bounceIn</option>
+              <option value="bounceOut">bounceOut</option>
+              <option value="bounceInOut">bounceInOut</option>
+              <option value="backIn">backIn</option>
+              <option value="backOut">backOut</option>
+              <option value="backInOut">backInOut</option>
+              <option value="elasticIn">elasticIn</option>
+              <option value="elasticOut">elasticOut</option>
+              <option value="elasticInOut">elasticInOut</option>
+            </select>
+        </div>
+    </div>
+    <div id="kagiChart" style="display:inline-block;float:left;"></div>
+    <!-- 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M -->
+    <button type="button" onclick="loadData()">Load new data</button>
+    <script>
+    var data = [];
+    var interval = sessionStorage.getItem('interval');
+    function loadData() 
+        {
+            console.log('loadData');
+            data = [];
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) 
+                {
+                    var array = JSON.parse(this.responseText);
+                    for(x = 0; x<array.length-1;x++)
+                        {
+                            var close  = parseFloat(array[x][4]);
+                            var date = new Date(array[x][6]);
+                            var month = parseInt(date.getMonth());
+                            month+=1;
+                            var formattedDate = date.getFullYear()+"-"+date.getDate()+"-"+month;
+                            var object = {'close':close,'date':formattedDate};
+                            data.push(object);
+                        }
+                }
+            };
+            
+             /* 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M */
+             
+            xhttp.open("GET", "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval="+interval+"&limit=1000", true);
+            xhttp.send();
+            drawChart(data);
+        }
+    </script>
+    <script type="text/javascript" src="./js/data.js" ></script>
+    <script type="text/javascript" src="./js/main.js"></script>
+    <script type="text/javascript" src="./js/kagi.js"></script>
+    <script type="text/javascript" src="./js/HistoricalData.js"></script>
+    <script type="text/javascript" src="./js/WebSocket.js"></script>
+</body>
+
+
+
+</html>
