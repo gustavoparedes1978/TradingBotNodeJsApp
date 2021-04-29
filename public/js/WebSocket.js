@@ -208,8 +208,6 @@ function startWebSocket(socket,streamName)
   
         if(currentDate>currentCloseTime)
         {
-            var currentDateMax = currentDate+5000;
-            if(currentDate<=currentDateMax){sessionStorage.setItem('closingPrice',closingPrice);}
             if(counterbuy!==0){counterbuy--;}
             if(countersell!==0){countersell--;}
             if(indexClosingTime===0){loadDataWebSocket();}
