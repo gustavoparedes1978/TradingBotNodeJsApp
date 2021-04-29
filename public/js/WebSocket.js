@@ -185,7 +185,7 @@ function startWebSocket(socket,streamName)
     {
         console.log('socket state onopen '+socket.readyState);
         var message = "{\"method\": \"SUBSCRIBE\",\"params\": [\""+streamName+"\"],\"id\": \"1\" }";
-        if(socket.readyState===0){sockets.send(message);}
+        if(socket.readyState===0){socket.send(message);}
         lowestATR = sessionStorage.getItem('ATR_SMAs_Array');
         lastBreakPoint =  sessionStorage.getItem('lastBreakPoint');
         console.log(lowestATR+' '+lastBreakPoint);  
