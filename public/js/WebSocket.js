@@ -256,8 +256,8 @@ function startWebSocket(socket,streamName)
             currentCloseTime = candle.k.T - (indexClosingTime)*(7.2e+6);
             currentDate = currentCloseTime;
             indexClosingTime--;
-            if(indexClosingTime===-1){indexClosingTime = 3;}
-            readyForTrading = true;
+            if(indexClosingTime===-1){readyForTrading = true;indexClosingTime = 3;}
+            
         
         }
     };
