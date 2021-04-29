@@ -262,14 +262,14 @@ function startWebSocket(socket,streamName)
             console.log('[close] Connection died');
         }
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
-        this.startWebSocket(socket,streamName);
+        startWebSocket(socket,streamName);
     };
 
     socket.onerror = function(error) {
         console.log('socket state onerror '+socket.readyState);
         console.log(`[error] ${error.message}`);
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
-        this.startWebSocket(socket,streamName);
+        startWebSocket(socket,streamName);
     };
     
     
