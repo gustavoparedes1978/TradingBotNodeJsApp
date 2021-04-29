@@ -250,13 +250,13 @@ function startWebSocket(socket,streamName)
                 console.log('sellOrderClose '+sellOrderClose);
                 console.log('division '+div);
                 console.log(Math.abs(1 - div));
-                readyForTrading = true;
             }
             
             currentCloseTime = candle.k.T - (indexClosingTime)*(7.2e+6);
             currentDate = currentCloseTime;
             indexClosingTime--;
             if(indexClosingTime===-1){indexClosingTime = 3;}
+            readyForTrading = true;
         
         }
     };
