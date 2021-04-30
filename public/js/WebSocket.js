@@ -173,7 +173,6 @@ var sellOrderClose = 0;
 function startWebSocket(socket,streamName)
 {
     var lowestATR = 0;
-    var lastBreakPoint = 0;
     var buyOpenOrderBoolean = true;
     var buyCloseOrderBoolean = false;
     var counterbuy = 0;
@@ -187,8 +186,7 @@ function startWebSocket(socket,streamName)
         var message = "{\"method\": \"SUBSCRIBE\",\"params\": [\""+streamName+"\"],\"id\": \"1\" }";
         if(socket.readyState===0){socket.send(message);}
         lowestATR = sessionStorage.getItem('ATR_SMAs_Array');
-        lastBreakPoint =  sessionStorage.getItem('lastBreakPoint');
-        console.log(lowestATR+' '+lastBreakPoint);  
+        console.log('lowestATR '+lowestATR);  
     };
     
     var indexClosingTime = 3;
@@ -208,17 +206,16 @@ function startWebSocket(socket,streamName)
   
         if(currentDate>currentCloseTime)
         {
+            buyOpenOrderBoolean = true;buyCloseOrderBoolean = false;
+            sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;
             if(counterbuy!==0){counterbuy--;}
             if(countersell!==0){countersell--;}
             if(indexClosingTime===0){loadDataWebSocket();}
             lowestATR = parseFloat(sessionStorage.getItem('ATR_SMAs_Array'));//obtener minimo ATR
-            lastBreakPoint = parseFloat(sessionStorage.getItem('lastBreakPoint'));// obtener el ultimo pivote
             console.log('indexClosingTime '+indexClosingTime);
-            console.log('lastBreakPoint '+lastBreakPoint+' lowestATR '+lowestATR);
             console.log('closeTime '+currentCloseTime+' indexClosingTime '+indexClosingTime);
             
             currentPrice = closingPrice;
-            if(indexClosingTime===3){currentPrice = lastBreakPoint;}
             console.log('currentPrice '+currentPrice);
             
             if(readyForTrading)
@@ -255,7 +252,6 @@ function startWebSocket(socket,streamName)
             currentDate = currentCloseTime;
             indexClosingTime--;
             if(indexClosingTime===-1){readyForTrading = true;indexClosingTime = 3;}
-            
         
         }
     };

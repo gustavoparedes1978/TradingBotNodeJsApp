@@ -444,7 +444,6 @@ function render_yang_ying_lines(data,width=900,height=400,margin,caption="Captio
         //calculo de diferencias entre breakpoints
         var lastBreakPoint = data_for_ticks[data_for_ticks.length-1].close;
         console.log('lastBreakPointKAGI '+lastBreakPoint);
-        sessionStorage.setItem('lastBreakPoint',lastBreakPoint);
         
         if (showBreakPointText){
 
