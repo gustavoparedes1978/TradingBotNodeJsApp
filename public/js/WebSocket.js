@@ -36,7 +36,7 @@ var symbolStream = "btcusdt";
 var stream = "@kline_"+interval;
 var streamName = symbolStream+stream;
 let socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
-startWebSocket(socket,streamName);
+socket = startWebSocket(socket,streamName);
 
 function loadDataWebSocket()
 {
@@ -169,7 +169,6 @@ var sellOrderOpenMin = 0;
 var sellOrderOpenMax = 0;
 var sellOrderClose = 0;
 
-
 function startWebSocket(socket,streamName)
 {
     var lowestATR = 0;
@@ -191,7 +190,9 @@ function startWebSocket(socket,streamName)
     
     var indexClosingTime = 3;
     var currentCloseTime = 0;
-    var readyForTrading = false;
+    sessionStorage.setItem('readyForTrading','false');
+    var readyForTrading = sessionStorage.getItem('readyForTrading');
+    
     socket.onmessage = function(event) 
     {
         //console.log('socket state onmessage '+sockets[sockets.length-1].readyState);
@@ -199,8 +200,19 @@ function startWebSocket(socket,streamName)
         var currentDate = parseInt(new Date().getTime()); //get current time in milliseconds
         var closingPrice = parseFloat(candle.k.c);
         var date = new Date();
-        if(closingPrice>=buyOrderOpenMin&&closingPrice<=buyOrderOpenMax&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0){counterbuy++;console.log("buy order open "+closingPrice+" "+date);buyOpenOrderBoolean = false;buyCloseOrderBoolean=true;}
-        if(closingPrice>=buyOrderClose&&buyOrderClose!==0&&buyCloseOrderBoolean){console.log("buy order close "+closingPrice+" "+date);buyOpenOrderBoolean = true;buyCloseOrderBoolean = false;}
+        if(closingPrice>=buyOrderOpenMin&&closingPrice<=buyOrderOpenMax&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0)
+        {
+            counterbuy++;
+            console.log("buy order open "+closingPrice+" "+date);
+            sessionStorage.setItem('buyOpenOrderBoolean','false');
+            sessionStorage.setItem('buyCloseOrderBoolean','true');
+        }
+        if(closingPrice>=buyOrderClose&&buyOrderClose!==0&&buyCloseOrderBoolean)
+        {
+            console.log("buy order close "+closingPrice+" "+date);
+            sessionStorage.setItem('buyOpenOrderBoolean','true');
+            sessionStorage.setItem('buyCloseOrderBoolean','false');
+        }
         if(closingPrice<=sellOrderOpenMin&&closingPrice>=sellOrderOpenMax&&sellOrderOpenMin!==0&&sellOpenOrderBoolean&&countersell===0){countersell++;console.log("sell order open "+closingPrice+" "+date);sellOpenOrderBoolean = false;sellCloseOrderBoolean = true;}
         if(closingPrice<=sellOrderClose&&sellOrderClose!==0&&sellCloseOrderBoolean){console.log("sell order close "+closingPrice+" "+date);sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;}
   
@@ -218,9 +230,8 @@ function startWebSocket(socket,streamName)
             currentPrice = closingPrice;
             console.log('currentPrice '+currentPrice);
             
-            if(readyForTrading)
+            if(readyForTrading==='true')
             {
-                
                 buyOrderOpenMin = currentPrice + lowestATR*0.125;
                 buyOrderOpenMax = currentPrice + lowestATR*0.1275;
                 buyOrderClose = currentPrice + lowestATR*0.25;
@@ -248,10 +259,15 @@ function startWebSocket(socket,streamName)
                 console.log(Math.abs(1 - div));
             }
             
+            var diff = currentDate - currentCloseTime;
+            console.log('diff '+diff);
+            if(diff<=5000){sessionStorage.setItem('readyForTrading','true');}
+            
             currentCloseTime = candle.k.T - (indexClosingTime)*(7.2e+6);
             currentDate = currentCloseTime;
             indexClosingTime--;
-            if(indexClosingTime===-1){readyForTrading = true;indexClosingTime = 3;}
+            
+            if(indexClosingTime===-1){indexClosingTime = 3;}
         
         }
     };
@@ -274,5 +290,6 @@ function startWebSocket(socket,streamName)
         startWebSocket(socket,streamName);
     };
     
-    
+    return socket;
+      
 }
