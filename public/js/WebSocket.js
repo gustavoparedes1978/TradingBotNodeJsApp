@@ -230,6 +230,10 @@ function startWebSocket(socket,streamName)
             currentPrice = closingPrice;
             console.log('currentPrice '+currentPrice);
             
+            var diff = currentDate - currentCloseTime;
+            console.log('diff '+diff);
+            if(diff<=5000){sessionStorage.setItem('readyForTrading','true');}
+            
             if(readyForTrading==='true')
             {
                 buyOrderOpenMin = currentPrice + lowestATR*0.125;
@@ -258,10 +262,6 @@ function startWebSocket(socket,streamName)
                 console.log('division '+div);
                 console.log(Math.abs(1 - div));
             }
-            
-            var diff = currentDate - currentCloseTime;
-            console.log('diff '+diff);
-            if(diff<=5000){sessionStorage.setItem('readyForTrading','true');}
             
             currentCloseTime = candle.k.T - (indexClosingTime)*(7.2e+6);
             currentDate = currentCloseTime;
