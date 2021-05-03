@@ -3,9 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/zzgustavop/Documents/kagicharts/NodeJsApplication/main.js</file>
-            <file>file:/C:/Users/zzgustavop/Documents/kagicharts/NodeJsApplication/package.json</file>
-            <file>file:/C:/Users/zzgustavop/Documents/kagicharts/NodeJsApplication/public/index.js</file>
+            <file>file:/C:/Users/zzgustavop/Documents/kagicharts/TradingBotNodeJsApp/public/js/main.js</file>
+            <file>file:/C:/Users/zzgustavop/Documents/kagicharts/TradingBotNodeJsApp/public/index.js</file>
+            <file>file:/C:/Users/zzgustavop/Documents/kagicharts/TradingBotNodeJsApp/public/js/WebSocket.js</file>
+            <file>file:/C:/Users/zzgustavop/Documents/kagicharts/TradingBotNodeJsApp/public/js/kagi.js</file>
+            <file>file:/C:/Users/zzgustavop/Documents/kagicharts/TradingBotNodeJsApp/public/js/HistoricalData.js</file>
         </group>
     </open-files>
 </project-private>

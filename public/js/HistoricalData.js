@@ -43,6 +43,7 @@ xhttpATR.onreadystatechange = function() {
         var reversalValueId = document.getElementById("reversalValue");
         
         var ATR_SMAs_Array = [];
+        var differenceHighOpen = [];
         var index = 0;
         
         //SMA simple moving average
@@ -66,6 +67,7 @@ xhttpATR.onreadystatechange = function() {
             reversalValueId.add(option);
             
             ATR_SMAs_Array.push(sumSMA);
+            
         }
         
         ATR_SMAs_Array.sort(function(a, b){return a - b});
