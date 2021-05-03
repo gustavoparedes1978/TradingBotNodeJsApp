@@ -248,7 +248,7 @@ function startWebSocket(socket,streamName)
             {
                 buyOrderOpenMin = currentPrice + lowestATR*0.125;
                 buyOrderOpenMax = currentPrice + lowestATR*0.1275;
-                buyOrderClose = currentPrice + lowestATR*0.1875;
+                buyOrderClose = currentPrice + lowestATR*0.250;
                 
                 var div = buyOrderOpenMin/buyOrderClose;
                 var diff = buyOrderOpenMax - buyOrderClose;
@@ -263,7 +263,7 @@ function startWebSocket(socket,streamName)
                 
                 sellOrderOpenMin = currentPrice - lowestATR*0.125;
                 sellOrderOpenMax = currentPrice - lowestATR*0.1275;
-                sellOrderClose = currentPrice - lowestATR*0.1875;
+                sellOrderClose = currentPrice - lowestATR*0.250;
             
                 div = sellOrderOpenMin/sellOrderClose;
                 var diff = sellOrderOpenMax - sellOrderClose;
