@@ -191,7 +191,6 @@ function startWebSocket(socket,streamName)
     var indexClosingTime = 3;
     var currentCloseTime = 0;
     sessionStorage.setItem('readyForTrading','false');
-    var readyForTrading = sessionStorage.getItem('readyForTrading');
     
     socket.onmessage = function(event) 
     {
@@ -246,9 +245,9 @@ function startWebSocket(socket,streamName)
             
             if(sessionStorage.getItem('readyForTrading')==='true')
             {
-                buyOrderOpenMin = currentPrice + lowestATR*0.125;
-                buyOrderOpenMax = currentPrice + lowestATR*0.130;
-                buyOrderClose = currentPrice + lowestATR*0.250;
+                buyOrderOpenMin = currentPrice + lowestATR*0.5;
+                buyOrderOpenMax = currentPrice + lowestATR*0.51;
+                buyOrderClose = currentPrice + lowestATR;
                 
                 var div = buyOrderOpenMin/buyOrderClose;
                 var diff = buyOrderOpenMax - buyOrderClose;
@@ -261,9 +260,9 @@ function startWebSocket(socket,streamName)
                 console.log('division '+div);
                 console.log(Math.abs(1 - div));
                 
-                sellOrderOpenMin = currentPrice - lowestATR*0.125;
-                sellOrderOpenMax = currentPrice - lowestATR*0.130;
-                sellOrderClose = currentPrice - lowestATR*0.250;
+                sellOrderOpenMin = currentPrice - lowestATR*0.5;
+                sellOrderOpenMax = currentPrice - lowestATR*0.51;
+                sellOrderClose = currentPrice - lowestATR;
             
                 div = sellOrderOpenMin/sellOrderClose;
                 var diff = sellOrderOpenMax - sellOrderClose;
@@ -277,11 +276,9 @@ function startWebSocket(socket,streamName)
                 console.log(Math.abs(1 - div));
             }
             
-            currentCloseTime = candle.k.T - (indexClosingTime)*(7.2e+6);
+            currentCloseTime = candle.k.T;
             currentDate = currentCloseTime;
             indexClosingTime--;
-            
-            if(indexClosingTime===-1){indexClosingTime = 3;}
         
         }
     };
@@ -295,6 +292,7 @@ function startWebSocket(socket,streamName)
         }
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
         startWebSocket(socket,streamName);
+        sessionStorage.setItem('readyForTrading','false');
     };
 
     socket.onerror = function(error) {
@@ -302,6 +300,7 @@ function startWebSocket(socket,streamName)
         console.log(`[error] ${error.message}`);
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
         startWebSocket(socket,streamName);
+        sessionStorage.setItem('readyForTrading','false');
     };
     
     return socket;
