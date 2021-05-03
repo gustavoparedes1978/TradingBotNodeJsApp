@@ -245,9 +245,9 @@ function startWebSocket(socket,streamName)
             
             if(sessionStorage.getItem('readyForTrading')==='true')
             {
-                buyOrderOpenMin = currentPrice + lowestATR*0.3;
-                buyOrderOpenMax = currentPrice + lowestATR*0.31;
-                buyOrderClose = currentPrice + lowestATR*0.5;
+                buyOrderOpenMin = currentPrice + lowestATR*0.35;
+                buyOrderOpenMax = currentPrice + lowestATR*0.36;
+                buyOrderClose = currentPrice + lowestATR*0.55;
                 
                 var div = buyOrderOpenMin/buyOrderClose;
                 var diff = buyOrderOpenMax - buyOrderClose;
@@ -260,9 +260,9 @@ function startWebSocket(socket,streamName)
                 console.log('division '+div);
                 console.log(Math.abs(1 - div));
                 
-                sellOrderOpenMin = currentPrice - lowestATR*0.3;
-                sellOrderOpenMax = currentPrice - lowestATR*0.31;
-                sellOrderClose = currentPrice - lowestATR*0.5;
+                sellOrderOpenMin = currentPrice - lowestATR*0.35;
+                sellOrderOpenMax = currentPrice - lowestATR*0.36;
+                sellOrderClose = currentPrice - lowestATR*0.55;
             
                 div = sellOrderOpenMin/sellOrderClose;
                 var diff = sellOrderOpenMax - sellOrderClose;
