@@ -229,8 +229,11 @@ function startWebSocket(socket,streamName)
   
         if(currentDate>currentCloseTime)
         {
+            if(currentCloseTime!==0){sessionStorage.setItem('readyForTrading','true');}
+            
             buyOpenOrderBoolean = true;buyCloseOrderBoolean = false;
             sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;
+            
             if(counterbuy!==0){counterbuy--;}
             if(countersell!==0){countersell--;}
             if(indexClosingTime===0){loadDataWebSocket();}
@@ -240,10 +243,6 @@ function startWebSocket(socket,streamName)
             
             currentPrice = closingPrice;
             console.log('currentPrice '+currentPrice);
-            
-            var diff = currentDate - currentCloseTime;
-            console.log('diff '+diff);
-            if(diff<=5000){sessionStorage.setItem('readyForTrading','true');}
             
             if(sessionStorage.getItem('readyForTrading')==='true')
             {
