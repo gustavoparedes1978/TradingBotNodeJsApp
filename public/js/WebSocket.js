@@ -169,15 +169,21 @@ var sellOrderOpenMin = 0;
 var sellOrderOpenMax = 0;
 var sellOrderClose = 0;
 
+var lowestATR = 0;
+var buyOpenOrderBoolean = true;
+var buyCloseOrderBoolean = false;
+var counterbuy = 0;
+var sellOpenOrderBoolean = true;
+var sellCloseOrderBoolean = false;
+var countersell = 0;
+
+    
+sessionStorage.setItem('currentCloseTime',0);
+var currentCloseTime = 0;
+sessionStorage.setItem('readyForTrading','false');
+
 function startWebSocket(socket,streamName)
 {
-    var lowestATR = 0;
-    var buyOpenOrderBoolean = true;
-    var buyCloseOrderBoolean = false;
-    var counterbuy = 0;
-    var sellOpenOrderBoolean = true;
-    var sellCloseOrderBoolean = false;
-    var countersell = 0;
     
     socket.onopen = function(event) 
     {
@@ -187,10 +193,7 @@ function startWebSocket(socket,streamName)
         lowestATR = sessionStorage.getItem('ATR_SMAs_Array');
         console.log('lowestATR '+lowestATR);  
     };
-    
-    sessionStorage.setItem('currentCloseTime',0);
-    var currentCloseTime = 0;
-    sessionStorage.setItem('readyForTrading','false');
+
     
     socket.onmessage = function(event) 
     {
@@ -232,7 +235,10 @@ function startWebSocket(socket,streamName)
   
         if(currentDate>parseInt(sessionStorage.getItem('currentCloseTime')))
         {
-            if(parseInt(sessionStorage.getItem('currentCloseTime'))!==0){sessionStorage.setItem('readyForTrading','true');}
+            if(parseInt(sessionStorage.getItem('currentCloseTime'))!==0)
+            {
+                sessionStorage.setItem('readyForTrading','true');
+            }
             
             buyOpenOrderBoolean = true; buyCloseOrderBoolean = false;
             sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;
@@ -291,6 +297,7 @@ function startWebSocket(socket,streamName)
         }
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
         startWebSocket(socket,streamName);
+        sessionStorage.setItem('readyForTrading','false');
         sessionStorage.setItem('currentCloseTime',currentCloseTime);
     };
 
@@ -299,6 +306,7 @@ function startWebSocket(socket,streamName)
         console.log(`[error] ${error.message}`);
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
         startWebSocket(socket,streamName);
+        sessionStorage.setItem('readyForTrading','false');
         sessionStorage.setItem('currentCloseTime',currentCloseTime);
     };
     
