@@ -188,7 +188,6 @@ function startWebSocket(socket,streamName)
         console.log('lowestATR '+lowestATR);  
     };
     
-    var indexClosingTime = 3;
     var currentCloseTime = 0;
     sessionStorage.setItem('readyForTrading','false');
     
@@ -234,10 +233,9 @@ function startWebSocket(socket,streamName)
             sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;
             counterbuy=0;countersell=0;
             
-            if(indexClosingTime===0){loadDataWebSocket();}
+            loadDataWebSocket();
             lowestATR = parseFloat(sessionStorage.getItem('ATR_SMAs_Array'));//obtener minimo ATR
-            console.log('indexClosingTime '+indexClosingTime);
-            console.log('closeTime '+currentCloseTime+' indexClosingTime '+indexClosingTime);
+            console.log('closeTime '+currentCloseTime);
             
             currentPrice = closingPrice;
             console.log('currentPrice '+currentPrice);
@@ -302,6 +300,6 @@ function startWebSocket(socket,streamName)
         sessionStorage.setItem('readyForTrading','false');
     };
     
-    return socket;
-      
+return socket;
+
 }
