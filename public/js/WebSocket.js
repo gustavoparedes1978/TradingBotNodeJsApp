@@ -234,9 +234,9 @@ function startWebSocket(socket,streamName)
         {
             if(currentCloseTime!==0){sessionStorage.setItem('readyForTrading','true');}
             
-            buyOpenOrderBoolean = true;buyCloseOrderBoolean = false;
+            buyOpenOrderBoolean = true; buyCloseOrderBoolean = false;
             sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;
-            counterbuy=0;countersell=0;
+            counterbuy=0;               countersell=0;
             
             loadDataWebSocket();
             lowestATR = parseFloat(sessionStorage.getItem('ATR_SMAs_Array'));//obtener minimo ATR
