@@ -232,9 +232,8 @@ function startWebSocket(socket,streamName)
             
             buyOpenOrderBoolean = true;buyCloseOrderBoolean = false;
             sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;
+            counterbuy=0;countersell=0;
             
-            if(counterbuy!==0){counterbuy--;}
-            if(countersell!==0){countersell--;}
             if(indexClosingTime===0){loadDataWebSocket();}
             lowestATR = parseFloat(sessionStorage.getItem('ATR_SMAs_Array'));//obtener minimo ATR
             console.log('indexClosingTime '+indexClosingTime);
