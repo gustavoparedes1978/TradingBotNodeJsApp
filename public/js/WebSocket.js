@@ -188,8 +188,7 @@ function startWebSocket(socket,streamName)
         console.log('lowestATR '+lowestATR);  
     };
     
-    var currentCloseTime = 0;
-    var currentDate = 0;
+    sessionStorage.setItem('currentCloseTime',0);
     sessionStorage.setItem('readyForTrading','false');
     
     socket.onmessage = function(event) 
@@ -230,7 +229,7 @@ function startWebSocket(socket,streamName)
             sellCloseOrderBoolean = false;
         }
   
-        if(currentDate>currentCloseTime)
+        if(currentDate>parseInt(sessionStorage.getItem('currentCloseTime')))
         {
             if(currentCloseTime!==0){sessionStorage.setItem('readyForTrading','true');}
             
@@ -277,10 +276,7 @@ function startWebSocket(socket,streamName)
                 console.log('division '+div);
                 console.log(Math.abs(1 - div));
             }
-            
-            currentCloseTime = candle.k.T;
-            currentDate = currentCloseTime;
-        
+            sessionStorage.setItem('currentCloseTime',candle.k.T);
         }
     };
 
