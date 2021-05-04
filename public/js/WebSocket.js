@@ -189,6 +189,7 @@ function startWebSocket(socket,streamName)
     };
     
     sessionStorage.setItem('currentCloseTime',0);
+    var currentCloseTime = 0;
     sessionStorage.setItem('readyForTrading','false');
     
     socket.onmessage = function(event) 
@@ -231,7 +232,7 @@ function startWebSocket(socket,streamName)
   
         if(currentDate>parseInt(sessionStorage.getItem('currentCloseTime')))
         {
-            if(currentCloseTime!==0){sessionStorage.setItem('readyForTrading','true');}
+            if(parseInt(sessionStorage.getItem('currentCloseTime'))!==0){sessionStorage.setItem('readyForTrading','true');}
             
             buyOpenOrderBoolean = true; buyCloseOrderBoolean = false;
             sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;
@@ -239,8 +240,8 @@ function startWebSocket(socket,streamName)
             
             loadDataWebSocket();
             lowestATR = parseFloat(sessionStorage.getItem('ATR_SMAs_Array'));//obtener minimo ATR
-            console.log('closeTime '+currentCloseTime);
-            
+            console.log('closeTime '+parseInt(sessionStorage.getItem('currentCloseTime')));
+
             currentPrice = closingPrice;
             console.log('currentPrice '+currentPrice);
             
@@ -277,6 +278,7 @@ function startWebSocket(socket,streamName)
                 console.log(Math.abs(1 - div));
             }
             sessionStorage.setItem('currentCloseTime',candle.k.T);
+            currentCloseTime = candle.k.T;
         }
     };
 
