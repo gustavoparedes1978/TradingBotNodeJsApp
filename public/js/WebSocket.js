@@ -275,7 +275,6 @@ function startWebSocket(socket,streamName)
             
             currentCloseTime = candle.k.T;
             currentDate = currentCloseTime;
-            indexClosingTime--;
         
         }
     };
