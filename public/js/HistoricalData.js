@@ -26,13 +26,13 @@
  /* 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M */
 sessionStorage.setItem('interval','8h');
 sessionStorage.setItem('symbol','BTCUSDT');
-var symbol = sessionStorage.getItem('symbol','BTCUSDT');
+var symbol = sessionStorage.getItem('symbol');
 var interval = sessionStorage.getItem('interval');
 
 var xhttpATR = new XMLHttpRequest();
 xhttpATR.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        
+    if (this.readyState === 4 && this.status === 200) {
+
         //document.getElementById("demo").innerHTML = this.responseText;
         var array = JSON.parse(this.responseText);
         var x;
@@ -41,11 +41,9 @@ xhttpATR.onreadystatechange = function() {
         var divider = 0;
         console.log('arraylength '+array.length);
         var reversalValueId = document.getElementById("reversalValue");
-        
+
         var ATR_SMAs_Array = [];
-        var differenceHighOpen = [];
-        var index = 0;
-        
+
         //SMA simple moving average
         for(limit = array.length-3; limit > 0; limit--)
         {
@@ -61,19 +59,19 @@ xhttpATR.onreadystatechange = function() {
             }
             var sumSMA = sum/divider;
             var option = document.createElement("option");
-           
+
             option.text = "ATR SMA "+sumSMA+" ";
             option.value = sumSMA;
             reversalValueId.add(option);
-            
-            ATR_SMAs_Array.push(sumSMA);
-            
+
+            ATR_SMAs_Array.push(sumSMA);  
         }
-        
+
         ATR_SMAs_Array.sort(function(a, b){return a - b});
         console.log(ATR_SMAs_Array[0]);
-        sessionStorage.setItem('ATR_SMAs_Array',ATR_SMAs_Array[0]);
         
+        sessionStorage.setItem('ATR_SMAs_Array',ATR_SMAs_Array[0]);
+
         var data = [];
         for(x = 0; x<array.length-1;x++)
             {
@@ -86,7 +84,7 @@ xhttpATR.onreadystatechange = function() {
                 data.push(object);
             }
         drawChart(data);
-        
+
         //EMA exponential moving average with alpha = 1/length
         /*
         var sum = 0;
@@ -108,7 +106,7 @@ xhttpATR.onreadystatechange = function() {
             sum = 0;
             exp = 0;
         }
-        
+
         var sum = 0;
         var exp = 0;
         var divisor;
@@ -128,7 +126,7 @@ xhttpATR.onreadystatechange = function() {
             sum = 0;
             exp = 0;
         }
-        
+
         var limit = 0;
         for(limit = 997; limit > 1; limit--)
         {
@@ -148,15 +146,17 @@ xhttpATR.onreadystatechange = function() {
                     i++;
                 }
             console.log('sum WMA '+denominator+' '+sum/denominator);
-          
+
         }*/
-         
+
     }
-  };
+};
   
    /* 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M */
   
-xhttpATR.open("GET", "https://api.binance.com/api/v3/klines?symbol="+symbol+"&interval="+interval+"&limit=1000", true);
-xhttpATR.send(); 
+    xhttpATR.open("GET", "https://api.binance.com/api/v3/klines?symbol="+symbol+"&interval="+interval+"&limit=1000", true);
+    xhttpATR.send();
+
+ 
            
 

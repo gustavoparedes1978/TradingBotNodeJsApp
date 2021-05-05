@@ -170,21 +170,31 @@ var sellOrderOpenMax = 0;
 var sellOrderClose = 0;
 
 var lowestATR = 0;
+
 var buyOpenOrderBoolean = true;
 var buyCloseOrderBoolean = false;
 var counterbuy = 0;
+
 var sellOpenOrderBoolean = true;
 var sellCloseOrderBoolean = false;
 var countersell = 0;
 
-    
 sessionStorage.setItem('currentCloseTime',0);
 var currentCloseTime = 0;
 sessionStorage.setItem('readyForTrading','false');
 
 function startWebSocket(socket,streamName)
 {
-    
+    if(sessionStorage.getItem('buyOrderOpenMin')!==null){buyOrderOpenMin=parseInt(sessionStorage.getItem('buyOrderOpenMin'));}
+    if(sessionStorage.getItem('buyOrderOpenMax')!==null){buyOrderOpenMax=parseInt(sessionStorage.getItem('buyOrderOpenMax'));}
+    if(sessionStorage.getItem('buyOrderClose')!==null){buyOrderClose=parseInt(sessionStorage.getItem('buyOrderClose'));}
+    if(sessionStorage.getItem('counterbuy')!==null){counterbuy=parseInt(sessionStorage.getItem('counterbuy'));}
+
+    if(sessionStorage.getItem('sellOrderOpenMin')!==null){sellOrderOpenMin=parseInt(sessionStorage.getItem('sellOrderOpenMin'));}
+    if(sessionStorage.getItem('sellOrderOpenMax')!==null){sellOrderOpenMax=parseInt(sessionStorage.getItem('sellOrderOpenMax'));}
+    if(sessionStorage.getItem('sellOrderClose')!==null){sellOrderClose=parseInt(sessionStorage.getItem('sellOrderClose'));}
+    if(sessionStorage.getItem('countersell')!==null){countersell=parseInt(sessionStorage.getItem('countersell'));}
+
     socket.onopen = function(event) 
     {
         console.log('socket state onopen '+socket.readyState);
@@ -202,13 +212,16 @@ function startWebSocket(socket,streamName)
         {
             currentCloseTime = parseInt(sessionStorage.getItem('currentCloseTime'));
         }
+        
         var candle = JSON.parse(event.data);
         var currentDate = parseInt(new Date().getTime()); //get current time in milliseconds
         var closingPrice = parseFloat(candle.k.c);
         var date = new Date();
+        
         if(closingPrice>=buyOrderOpenMin&&closingPrice<=buyOrderOpenMax&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0)
         {
             counterbuy++;
+            sessionStorage.setItem('counterbuy',counterbuy);
             console.log("buy order open "+closingPrice+" "+date);
             sessionStorage.setItem('buyOpenOrderBoolean','false');
             sessionStorage.setItem('buyCloseOrderBoolean','true');
@@ -219,18 +232,21 @@ function startWebSocket(socket,streamName)
             sessionStorage.setItem('buyOpenOrderBoolean','true');
             sessionStorage.setItem('buyCloseOrderBoolean','false');
         }
+        
         if(closingPrice<=sellOrderOpenMin&&closingPrice>=sellOrderOpenMax&&sellOrderOpenMin!==0&&sellOpenOrderBoolean&&countersell===0)
         {
             countersell++;
+            sessionStorage.setItem('countersell',countersell);
             console.log("sell order open "+closingPrice+" "+date);
-            sellOpenOrderBoolean = false;
-            sellCloseOrderBoolean = true;
+            sessionStorage.setItem('sellOpenOrderBoolean','false');
+            sessionStorage.setItem('sellCloseOrderBoolean','true');
+            
         }
         if(closingPrice<=sellOrderClose&&sellOrderClose!==0&&sellCloseOrderBoolean)
         {
             console.log("sell order close "+closingPrice+" "+date);
-            sellOpenOrderBoolean = true;
-            sellCloseOrderBoolean = false;
+            sessionStorage.setItem('sellOpenOrderBoolean','true');
+            sessionStorage.setItem('sellCloseOrderBoolean','false');
         }
   
         if(currentDate>parseInt(sessionStorage.getItem('currentCloseTime')))
@@ -240,13 +256,19 @@ function startWebSocket(socket,streamName)
                 sessionStorage.setItem('readyForTrading','true');
             }
             
-            buyOpenOrderBoolean = true; buyCloseOrderBoolean = false;
-            sellOpenOrderBoolean = true;sellCloseOrderBoolean = false;
-            counterbuy=0;               countersell=0;
+            buyOpenOrderBoolean = true;     buyCloseOrderBoolean = false;
+            sellOpenOrderBoolean = true;    sellCloseOrderBoolean = false;
+            counterbuy=0;                   countersell=0;
+            sessionStorage.setItem('buyOpenOrderBoolean',buyOpenOrderBoolean);
+            sessionStorage.setItem('buyCloseOrderBoolean',buyCloseOrderBoolean);
+            sessionStorage.setItem('sellOpenOrderBoolean',sellOpenOrderBoolean);
+            sessionStorage.setItem('sellCloseOrderBoolean',sellCloseOrderBoolean);
+            sessionStorage.setItem('counterbuy',counterbuy);
+            sessionStorage.setItem('countersell',countersell);
             
             loadDataWebSocket();
             lowestATR = parseFloat(sessionStorage.getItem('ATR_SMAs_Array'));//obtener minimo ATR
-            console.log('closeTime '+parseInt(sessionStorage.getItem('currentCloseTime')));
+            console.log('closeTime '+sessionStorage.getItem('currentCloseTime'));
 
             currentPrice = closingPrice;
             console.log('currentPrice '+currentPrice);
@@ -282,6 +304,13 @@ function startWebSocket(socket,streamName)
                 console.log('sellOrderClose '+sellOrderClose);
                 console.log('division '+div);
                 console.log(Math.abs(1 - div));
+                
+                sessionStorage.setItem('buyOrderOpenMin',buyOrderOpenMin);
+                sessionStorage.setItem('buyOrderOpenMax',buyOrderOpenMax);
+                sessionStorage.setItem('buyOrderClose',buyOrderClose);
+                sessionStorage.setItem('sellOrderOpenMin',sellOrderOpenMin);
+                sessionStorage.setItem('sellOrderOpenMax',sellOrderOpenMax);
+                sessionStorage.setItem('sellOrderClose',sellOrderClose);
             }
             sessionStorage.setItem('currentCloseTime',candle.k.T);
             currentCloseTime = candle.k.T;
@@ -297,8 +326,6 @@ function startWebSocket(socket,streamName)
         }
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
         startWebSocket(socket,streamName);
-        sessionStorage.setItem('readyForTrading','false');
-        sessionStorage.setItem('currentCloseTime',currentCloseTime);
     };
 
     socket.onerror = function(error) {
@@ -306,8 +333,6 @@ function startWebSocket(socket,streamName)
         console.log(`[error] ${error.message}`);
         socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
         startWebSocket(socket,streamName);
-        sessionStorage.setItem('readyForTrading','false');
-        sessionStorage.setItem('currentCloseTime',currentCloseTime);
     };
     
 return socket;
