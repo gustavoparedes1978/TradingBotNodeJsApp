@@ -91,9 +91,11 @@ function changeBreakPointColor(element){
     breakPointColor = element.value;
 }
 
-function drawChart(data){
+function drawChart(data,reversalValueParam){
     console.log('drawChart');
     var chartElement = document.getElementById("kagiChart");
+    var reversalValue = parseFloat(reversalValueParam);
+    console.log('reversal '+reversalValue);
     chartElement.innerHTML="";
     var chart_options = {
         "width":window.innerWidth - document.getElementById("settings").offsetWidth - 25,
@@ -132,7 +134,6 @@ var animEase = document.getElementById("animEase").value;
 var animDuration = document.getElementById("animDuration").value;
 var chartTheme = document.getElementById("chartTheme").value;
 var reversalType = document.getElementById("reversalType").value;
-var reversalValue = document.getElementById("reversalValue").value;
 
 var caption = document.getElementById("caption").value;
 var subCaption = document.getElementById("subCaption").value;

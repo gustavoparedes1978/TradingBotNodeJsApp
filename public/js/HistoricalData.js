@@ -83,7 +83,7 @@ xhttpATR.onreadystatechange = function() {
                 var object = {'close':close,'date':formattedDate};
                 data.push(object);
             }
-        drawChart(data);
+        drawChart(data,ATR_SMAs_Array[0]);
 
         //EMA exponential moving average with alpha = 1/length
         /*
