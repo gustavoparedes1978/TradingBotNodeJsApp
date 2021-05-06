@@ -185,17 +185,17 @@ sessionStorage.setItem('readyForTrading','false');
 
 function startWebSocket(socket,streamName)
 {
-    if(sessionStorage.getItem('buyOrderOpenMin')!==null){buyOrderOpenMin=parseInt(sessionStorage.getItem('buyOrderOpenMin'));}
-    if(sessionStorage.getItem('buyOrderOpenMax')!==null){buyOrderOpenMax=parseInt(sessionStorage.getItem('buyOrderOpenMax'));}
-    if(sessionStorage.getItem('buyOrderClose')!==null){buyOrderClose=parseInt(sessionStorage.getItem('buyOrderClose'));}
-    if(sessionStorage.getItem('counterbuy')!==null){counterbuy=parseInt(sessionStorage.getItem('counterbuy'));}
-    if(sessionStorage.getItem('buyCloseOrderBoolean')!==null){buyCloseOrderBoolean=parseInt(sessionStorage.getItem('buyCloseOrderBoolean'));}
+    if(sessionStorage.getItem('buyOrderOpenMin')!==null){buyOrderOpenMin=parseFloat(sessionStorage.getItem('buyOrderOpenMin'));}
+    if(sessionStorage.getItem('buyOrderOpenMax')!==null){buyOrderOpenMax=parseFloat(sessionStorage.getItem('buyOrderOpenMax'));}
+    if(sessionStorage.getItem('buyOrderClose')!==null){buyOrderClose=parseFloat(sessionStorage.getItem('buyOrderClose'));}
+    if(sessionStorage.getItem('counterbuy')!==null){counterbuy=parseFloat(sessionStorage.getItem('counterbuy'));}
+    if(sessionStorage.getItem('buyCloseOrderBoolean')!==null){buyCloseOrderBoolean=parseFloat(sessionStorage.getItem('buyCloseOrderBoolean'));}
 
-    if(sessionStorage.getItem('sellOrderOpenMin')!==null){sellOrderOpenMin=parseInt(sessionStorage.getItem('sellOrderOpenMin'));}
-    if(sessionStorage.getItem('sellOrderOpenMax')!==null){sellOrderOpenMax=parseInt(sessionStorage.getItem('sellOrderOpenMax'));}
-    if(sessionStorage.getItem('sellOrderClose')!==null){sellOrderClose=parseInt(sessionStorage.getItem('sellOrderClose'));}
-    if(sessionStorage.getItem('countersell')!==null){countersell=parseInt(sessionStorage.getItem('countersell'));}
-    if(sessionStorage.getItem('sellCloseOrderBoolean')!==null){sellCloseOrderBoolean=parseInt(sessionStorage.getItem('sellCloseOrderBoolean'));}
+    if(sessionStorage.getItem('sellOrderOpenMin')!==null){sellOrderOpenMin=parseFloat(sessionStorage.getItem('sellOrderOpenMin'));}
+    if(sessionStorage.getItem('sellOrderOpenMax')!==null){sellOrderOpenMax=parseFloat(sessionStorage.getItem('sellOrderOpenMax'));}
+    if(sessionStorage.getItem('sellOrderClose')!==null){sellOrderClose=parseFloat(sessionStorage.getItem('sellOrderClose'));}
+    if(sessionStorage.getItem('countersell')!==null){countersell=parseFloat(sessionStorage.getItem('countersell'));}
+    if(sessionStorage.getItem('sellCloseOrderBoolean')!==null){sellCloseOrderBoolean=parseFloat(sessionStorage.getItem('sellCloseOrderBoolean'));}
 
     socket.onopen = function(event) 
     {
