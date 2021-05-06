@@ -209,7 +209,6 @@ function startWebSocket(socket,streamName)
     
     socket.onmessage = function(event) 
     {
-        console.log('socket state onmessage '+sockets[sockets.length-1].readyState);
         if(sessionStorage.getItem('currentCloseTime')!==null)
         {
             currentCloseTime = parseInt(sessionStorage.getItem('currentCloseTime'));
@@ -218,7 +217,6 @@ function startWebSocket(socket,streamName)
         var candle = JSON.parse(event.data);
         var currentDate = parseInt(new Date().getTime()); //get current time in milliseconds
         var closingPrice = parseFloat(candle.k.c);
-        console.log(closingPrice);
         var date = new Date();
         
         if(closingPrice>=buyOrderOpenMin&&closingPrice<=buyOrderOpenMax&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0)
