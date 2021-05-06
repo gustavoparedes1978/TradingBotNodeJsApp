@@ -189,11 +189,13 @@ function startWebSocket(socket,streamName)
     if(sessionStorage.getItem('buyOrderOpenMax')!==null){buyOrderOpenMax=parseInt(sessionStorage.getItem('buyOrderOpenMax'));}
     if(sessionStorage.getItem('buyOrderClose')!==null){buyOrderClose=parseInt(sessionStorage.getItem('buyOrderClose'));}
     if(sessionStorage.getItem('counterbuy')!==null){counterbuy=parseInt(sessionStorage.getItem('counterbuy'));}
+    if(sessionStorage.getItem('buyCloseOrderBoolean')!==null){buyCloseOrderBoolean=parseInt(sessionStorage.getItem('buyCloseOrderBoolean'));}
 
     if(sessionStorage.getItem('sellOrderOpenMin')!==null){sellOrderOpenMin=parseInt(sessionStorage.getItem('sellOrderOpenMin'));}
     if(sessionStorage.getItem('sellOrderOpenMax')!==null){sellOrderOpenMax=parseInt(sessionStorage.getItem('sellOrderOpenMax'));}
     if(sessionStorage.getItem('sellOrderClose')!==null){sellOrderClose=parseInt(sessionStorage.getItem('sellOrderClose'));}
     if(sessionStorage.getItem('countersell')!==null){countersell=parseInt(sessionStorage.getItem('countersell'));}
+    if(sessionStorage.getItem('sellCloseOrderBoolean')!==null){sellCloseOrderBoolean=parseInt(sessionStorage.getItem('sellCloseOrderBoolean'));}
 
     socket.onopen = function(event) 
     {
@@ -207,7 +209,7 @@ function startWebSocket(socket,streamName)
     
     socket.onmessage = function(event) 
     {
-        //console.log('socket state onmessage '+sockets[sockets.length-1].readyState);
+        console.log('socket state onmessage '+sockets[sockets.length-1].readyState);
         if(sessionStorage.getItem('currentCloseTime')!==null)
         {
             currentCloseTime = parseInt(sessionStorage.getItem('currentCloseTime'));
@@ -216,6 +218,7 @@ function startWebSocket(socket,streamName)
         var candle = JSON.parse(event.data);
         var currentDate = parseInt(new Date().getTime()); //get current time in milliseconds
         var closingPrice = parseFloat(candle.k.c);
+        console.log(closingPrice);
         var date = new Date();
         
         if(closingPrice>=buyOrderOpenMin&&closingPrice<=buyOrderOpenMax&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0)
@@ -223,12 +226,14 @@ function startWebSocket(socket,streamName)
             counterbuy++;
             sessionStorage.setItem('counterbuy',counterbuy);
             console.log("buy order open "+closingPrice+" "+date);
+            buyOpenOrderBoolean = false; buyCloseOrderBoolean = true;
             sessionStorage.setItem('buyOpenOrderBoolean','false');
             sessionStorage.setItem('buyCloseOrderBoolean','true');
         }
         if(closingPrice>=buyOrderClose&&buyOrderClose!==0&&buyCloseOrderBoolean)
         {
             console.log("buy order close "+closingPrice+" "+date);
+            buyOpenOrderBoolean = true; buyCloseOrderBoolean = false;
             sessionStorage.setItem('buyOpenOrderBoolean','true');
             sessionStorage.setItem('buyCloseOrderBoolean','false');
         }
@@ -238,6 +243,7 @@ function startWebSocket(socket,streamName)
             countersell++;
             sessionStorage.setItem('countersell',countersell);
             console.log("sell order open "+closingPrice+" "+date);
+            sellOpenOrderBoolean = false; sellCloseOrderBoolean = true;
             sessionStorage.setItem('sellOpenOrderBoolean','false');
             sessionStorage.setItem('sellCloseOrderBoolean','true');
             
@@ -245,6 +251,7 @@ function startWebSocket(socket,streamName)
         if(closingPrice<=sellOrderClose&&sellOrderClose!==0&&sellCloseOrderBoolean)
         {
             console.log("sell order close "+closingPrice+" "+date);
+            sellOpenOrderBoolean = true; sellCloseOrderBoolean = false;
             sessionStorage.setItem('sellOpenOrderBoolean','true');
             sessionStorage.setItem('sellCloseOrderBoolean','false');
         }
@@ -277,7 +284,7 @@ function startWebSocket(socket,streamName)
             {
                 buyOrderOpenMin = currentPrice + lowestATR*0.40;
                 buyOrderOpenMax = currentPrice + lowestATR*0.41;
-                buyOrderClose = currentPrice + lowestATR*0.70;
+                buyOrderClose = currentPrice + lowestATR*0.60;
                 
                 var div = buyOrderOpenMin/buyOrderClose;
                 var diff = buyOrderOpenMax - buyOrderClose;
@@ -292,7 +299,7 @@ function startWebSocket(socket,streamName)
                 
                 sellOrderOpenMin = currentPrice - lowestATR*0.40;
                 sellOrderOpenMax = currentPrice - lowestATR*0.41;
-                sellOrderClose = currentPrice - lowestATR*0.70;
+                sellOrderClose = currentPrice - lowestATR*0.60;
             
                 div = sellOrderOpenMin/sellOrderClose;
                 var diff = sellOrderOpenMax - sellOrderClose;
