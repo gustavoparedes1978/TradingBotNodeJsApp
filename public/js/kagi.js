@@ -120,7 +120,7 @@ function KagiChart(data,chart_options){
     // Filter the preprocessed data to remove the points with same x coordinate except the min and max
     var filtered_data = filter_same_x_points_from_data(pre_processed_data);
     var indexFilteredData;
-    for(indexFilteredData=0;indexFilteredData<=filtered_data.length;indexFilteredData++)
+    for(indexFilteredData=0;indexFilteredData<filtered_data.length;indexFilteredData++)
     {
         console.log(filtered_data[indexFilteredData]);
     }
