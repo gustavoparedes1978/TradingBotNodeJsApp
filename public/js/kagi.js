@@ -116,15 +116,8 @@ function KagiChart(data,chart_options){
     }*/
     // Preprocess the data and generate the initial set of coordinates which have to be plotted.
     var pre_processed_data = preprocess_data(inputData,reversalType,reversalValue);
-    console.log(pre_processed_data);
     // Filter the preprocessed data to remove the points with same x coordinate except the min and max
     var filtered_data = filter_same_x_points_from_data(pre_processed_data);
-    var indexFilteredData;
-    for(indexFilteredData=0;indexFilteredData<filtered_data.length;indexFilteredData++)
-    {
-        console.log(filtered_data[indexFilteredData]);
-    }
-    
     // Add additional points for formatting the yang-ying lines at the base and shoulders.
     var formatted_data = add_base_shoulder_points(filtered_data);
     // Group the lines into a set with its formatting based on break points computed in add_base_shoulder_points().
