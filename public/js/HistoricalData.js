@@ -24,10 +24,10 @@
   */
 
  /* 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M */
-sessionStorage.setItem('interval','8h');
-sessionStorage.setItem('symbol','BTCUSDT');
-var symbol = sessionStorage.getItem('symbol');
-var interval = sessionStorage.getItem('interval');
+localStorage.setItem('interval','8h');
+localStorage.setItem('symbol','BTCUSDT');
+var symbol = localStorage.getItem('symbol');
+var interval = localStorage.getItem('interval');
 
 var xhttpATR = new XMLHttpRequest();
 xhttpATR.onreadystatechange = function() {
@@ -70,7 +70,7 @@ xhttpATR.onreadystatechange = function() {
         ATR_SMAs_Array.sort(function(a, b){return a - b});
         console.log(ATR_SMAs_Array[0]);
         
-        sessionStorage.setItem('ATR_SMAs_Array',ATR_SMAs_Array[0]);
+        localStorage.setItem('ATR_SMAs_Array',ATR_SMAs_Array[0]);
 
         var data = [];
         for(x = 0; x<array.length-1;x++)
