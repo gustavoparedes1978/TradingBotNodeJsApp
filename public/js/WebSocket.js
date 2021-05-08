@@ -209,6 +209,7 @@ function startWebSocket(socket,streamName)
     
     socket.onmessage = function(event) 
     {
+        console.log('socket state onmessage '+socket.readyState);
         if(sessionStorage.getItem('currentCloseTime')!==null)
         {
             currentCloseTime = parseInt(sessionStorage.getItem('currentCloseTime'));
