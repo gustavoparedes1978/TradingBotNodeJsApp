@@ -222,7 +222,7 @@ function startWebSocket(socket,streamName)
         if(closingPrice>=buyOrderOpenMin&&closingPrice<=buyOrderOpenMax&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0)
         {
             counterbuy++;
-            sessionStorage.setItem('counterbuy','1');
+            sessionStorage.setItem('counterbuy',counterbuy);
             console.log("buy order open "+closingPrice+" "+date);
             buyOpenOrderBoolean = false; buyCloseOrderBoolean = true;
             sessionStorage.setItem('buyOpenOrderBoolean','false');
@@ -240,7 +240,7 @@ function startWebSocket(socket,streamName)
         if(closingPrice<=sellOrderOpenMin&&closingPrice>=sellOrderOpenMax&&sellOrderOpenMin!==0&&sellOpenOrderBoolean&&countersell===0)
         {
             countersell++;
-            sessionStorage.setItem('countersell','1');
+            sessionStorage.setItem('countersell',countersell);
             console.log("sell order open "+closingPrice+" "+date);
             sellOpenOrderBoolean = false; sellCloseOrderBoolean = true;
             sessionStorage.setItem('sellOpenOrderBoolean','false');
