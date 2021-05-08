@@ -163,10 +163,8 @@ function loadDataWebSocket()
 }
 
 var buyOrderOpenMin = 0;
-var buyOrderOpenMax = 0;
 var buyOrderClose = 0;
 var sellOrderOpenMin = 0;
-var sellOrderOpenMax = 0;
 var sellOrderClose = 0;
 
 var lowestATR = 0;
@@ -186,13 +184,11 @@ localStorage.setItem('readyForTrading','false');
 function startWebSocket(socket,streamName)
 {
     if(localStorage.getItem('buyOrderOpenMin')!==null){buyOrderOpenMin=parseFloat(localStorage.getItem('buyOrderOpenMin'));}
-    if(localStorage.getItem('buyOrderOpenMax')!==null){buyOrderOpenMax=parseFloat(localStorage.getItem('buyOrderOpenMax'));}
     if(localStorage.getItem('buyOrderClose')!==null){buyOrderClose=parseFloat(localStorage.getItem('buyOrderClose'));}
     if(localStorage.getItem('counterbuy')!==null){counterbuy=parseInt(localStorage.getItem('counterbuy'));}
     if(localStorage.getItem('buyCloseOrderBoolean')!==null){buyCloseOrderBoolean=parseFloat(localStorage.getItem('buyCloseOrderBoolean'));}
 
     if(localStorage.getItem('sellOrderOpenMin')!==null){sellOrderOpenMin=parseFloat(localStorage.getItem('sellOrderOpenMin'));}
-    if(localStorage.getItem('sellOrderOpenMax')!==null){sellOrderOpenMax=parseFloat(localStorage.getItem('sellOrderOpenMax'));}
     if(localStorage.getItem('sellOrderClose')!==null){sellOrderClose=parseFloat(localStorage.getItem('sellOrderClose'));}
     if(localStorage.getItem('countersell')!==null){countersell=parseInt(localStorage.getItem('countersell'));}
     if(localStorage.getItem('sellCloseOrderBoolean')!==null){sellCloseOrderBoolean=parseFloat(localStorage.getItem('sellCloseOrderBoolean'));}
@@ -222,7 +218,7 @@ function startWebSocket(socket,streamName)
         var closingPrice = parseFloat(candle.k.c);
         
         
-        if(closingPrice>=buyOrderOpenMin&&closingPrice<=buyOrderOpenMax&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0)
+        if(closingPrice>=buyOrderOpenMin&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0)
         {
             counterbuy++;
             localStorage.setItem('counterbuy',counterbuy);
@@ -240,7 +236,7 @@ function startWebSocket(socket,streamName)
             localStorage.setItem('buyCloseOrderBoolean','false');
         }
         
-        if(closingPrice<=sellOrderOpenMin&&closingPrice>=sellOrderOpenMax&&sellOrderOpenMin!==0&&sellOpenOrderBoolean&&countersell===0)
+        if(closingPrice<=sellOrderOpenMin&&sellOrderOpenMin!==0&&sellOpenOrderBoolean&&countersell===0)
         {
             countersell++;
             localStorage.setItem('countersell',countersell);
@@ -284,40 +280,30 @@ function startWebSocket(socket,streamName)
             if(localStorage.getItem('readyForTrading')==='true')
             {
                 buyOrderOpenMin = currentPrice + lowestATR*0.80;
-                buyOrderOpenMax = currentPrice + lowestATR*0.81;
                 buyOrderClose = currentPrice + lowestATR;
                 
                 var div = buyOrderOpenMin/buyOrderClose;
-                var diff = buyOrderOpenMax - buyOrderClose;
                 var diff2 = currentPrice - buyOrderClose;
-                console.log('currentPrice - buyOrderClose '+Math.abs(diff2));
-                console.log('buyOrderOpenMax - buyOrderClose '+Math.abs(diff));
+                console.log('currentPrice - buyOrderClose ' + Math.abs(diff2));
                 console.log('buyOrderOpenMin '+buyOrderOpenMin);
-                console.log('buyOrderOpenMax '+buyOrderOpenMax);
                 console.log('buyOrderClose '+buyOrderClose);
                 console.log('division '+div);
                 console.log(Math.abs(1 - div));
                 
                 sellOrderOpenMin = currentPrice - lowestATR*0.80;
-                sellOrderOpenMax = currentPrice - lowestATR*0.81;
                 sellOrderClose = currentPrice - lowestATR;
             
                 div = sellOrderOpenMin/sellOrderClose;
-                var diff = sellOrderOpenMax - sellOrderClose;
                 var diff2 = currentPrice - sellOrderClose;
                 console.log('currentPrice - sellOrderClose '+Math.abs(diff2));
-                console.log('sellOrderOpenMax - sellOrderClose '+Math.abs(diff));
                 console.log('sellOrderOpenMin '+sellOrderOpenMin);
-                console.log('sellOrderOpenMax '+sellOrderOpenMax);
                 console.log('sellOrderClose '+sellOrderClose);
                 console.log('division '+div);
                 console.log(Math.abs(1 - div));
                 
                 localStorage.setItem('buyOrderOpenMin',buyOrderOpenMin);
-                localStorage.setItem('buyOrderOpenMax',buyOrderOpenMax);
                 localStorage.setItem('buyOrderClose',buyOrderClose);
                 localStorage.setItem('sellOrderOpenMin',sellOrderOpenMin);
-                localStorage.setItem('sellOrderOpenMax',sellOrderOpenMax);
                 localStorage.setItem('sellOrderClose',sellOrderClose);
             }
             localStorage.setItem('currentCloseTime',candle.k.T);
