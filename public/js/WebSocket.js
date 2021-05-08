@@ -199,7 +199,7 @@ function startWebSocket(socket,streamName)
 
     socket.onopen = function(event) 
     {
-        console.log('socket state onopen '+socket.readyState);
+        console.log('socket state onopen '+socket.readyState+' '+date);
         var message = "{\"method\": \"SUBSCRIBE\",\"params\": [\""+streamName+"\"],\"id\": \"1\" }";
         if(socket.readyState===0){socket.send(message);}
         lowestATR = sessionStorage.getItem('ATR_SMAs_Array');
@@ -209,7 +209,7 @@ function startWebSocket(socket,streamName)
     
     socket.onmessage = function(event) 
     {
-        console.log('socket state onmessage '+socket.readyState);
+        console.log('socket state onmessage '+socket.readyState+' '+date);
         if(sessionStorage.getItem('currentCloseTime')!==null)
         {
             currentCloseTime = parseInt(sessionStorage.getItem('currentCloseTime'));
