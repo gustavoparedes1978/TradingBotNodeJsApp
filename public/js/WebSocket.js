@@ -199,6 +199,7 @@ function startWebSocket(socket,streamName)
 
     socket.onopen = function(event) 
     {
+        var date = new Date();
         console.log('socket state onopen '+socket.readyState+' '+date);
         var message = "{\"method\": \"SUBSCRIBE\",\"params\": [\""+streamName+"\"],\"id\": \"1\" }";
         if(socket.readyState===0){socket.send(message);}
@@ -209,6 +210,7 @@ function startWebSocket(socket,streamName)
     
     socket.onmessage = function(event) 
     {
+        var date = new Date();
         console.log('socket state onmessage '+socket.readyState+' '+date);
         if(sessionStorage.getItem('currentCloseTime')!==null)
         {
@@ -218,7 +220,7 @@ function startWebSocket(socket,streamName)
         var candle = JSON.parse(event.data);
         var currentDate = parseInt(new Date().getTime()); //get current time in milliseconds
         var closingPrice = parseFloat(candle.k.c);
-        var date = new Date();
+        
         
         if(closingPrice>=buyOrderOpenMin&&closingPrice<=buyOrderOpenMax&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0)
         {
@@ -324,7 +326,8 @@ function startWebSocket(socket,streamName)
     };
 
     socket.onclose = function(event) {
-        console.log('socket state onclose '+socket.readyState);
+        var date = new Date();
+        console.log('socket state onclose '+socket.readyState+' '+date);
         if (event.wasClean) {
             console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
         } else {
@@ -334,7 +337,8 @@ function startWebSocket(socket,streamName)
     };
 
     socket.onerror = function(error) {
-        console.log('socket state onerror '+socket.readyState);
+        var date = new Date();
+        console.log('socket state onerror '+socket.readyState+' '+date);
         console.log(`[error] ${error.message}`);
         location.reload();
     };
