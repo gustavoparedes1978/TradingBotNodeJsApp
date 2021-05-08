@@ -188,13 +188,13 @@ function startWebSocket(socket,streamName)
     if(sessionStorage.getItem('buyOrderOpenMin')!==null){buyOrderOpenMin=parseFloat(sessionStorage.getItem('buyOrderOpenMin'));}
     if(sessionStorage.getItem('buyOrderOpenMax')!==null){buyOrderOpenMax=parseFloat(sessionStorage.getItem('buyOrderOpenMax'));}
     if(sessionStorage.getItem('buyOrderClose')!==null){buyOrderClose=parseFloat(sessionStorage.getItem('buyOrderClose'));}
-    if(sessionStorage.getItem('counterbuy')!==null){counterbuy=parseFloat(sessionStorage.getItem('counterbuy'));}
+    if(sessionStorage.getItem('counterbuy')!==null){counterbuy=parseInt(sessionStorage.getItem('counterbuy'));}
     if(sessionStorage.getItem('buyCloseOrderBoolean')!==null){buyCloseOrderBoolean=parseFloat(sessionStorage.getItem('buyCloseOrderBoolean'));}
 
     if(sessionStorage.getItem('sellOrderOpenMin')!==null){sellOrderOpenMin=parseFloat(sessionStorage.getItem('sellOrderOpenMin'));}
     if(sessionStorage.getItem('sellOrderOpenMax')!==null){sellOrderOpenMax=parseFloat(sessionStorage.getItem('sellOrderOpenMax'));}
     if(sessionStorage.getItem('sellOrderClose')!==null){sellOrderClose=parseFloat(sessionStorage.getItem('sellOrderClose'));}
-    if(sessionStorage.getItem('countersell')!==null){countersell=parseFloat(sessionStorage.getItem('countersell'));}
+    if(sessionStorage.getItem('countersell')!==null){countersell=parseInt(sessionStorage.getItem('countersell'));}
     if(sessionStorage.getItem('sellCloseOrderBoolean')!==null){sellCloseOrderBoolean=parseFloat(sessionStorage.getItem('sellCloseOrderBoolean'));}
 
     socket.onopen = function(event) 
@@ -222,11 +222,12 @@ function startWebSocket(socket,streamName)
         if(closingPrice>=buyOrderOpenMin&&closingPrice<=buyOrderOpenMax&&buyOrderOpenMin!==0&&buyOpenOrderBoolean&&counterbuy===0)
         {
             counterbuy++;
-            sessionStorage.setItem('counterbuy',counterbuy);
+            sessionStorage.setItem('counterbuy','1');
             console.log("buy order open "+closingPrice+" "+date);
             buyOpenOrderBoolean = false; buyCloseOrderBoolean = true;
             sessionStorage.setItem('buyOpenOrderBoolean','false');
             sessionStorage.setItem('buyCloseOrderBoolean','true');
+            sessionStorage.setItem('counterbuy',counterbuy);
         }
         if(closingPrice>=buyOrderClose&&buyOrderClose!==0&&buyCloseOrderBoolean)
         {
@@ -239,7 +240,7 @@ function startWebSocket(socket,streamName)
         if(closingPrice<=sellOrderOpenMin&&closingPrice>=sellOrderOpenMax&&sellOrderOpenMin!==0&&sellOpenOrderBoolean&&countersell===0)
         {
             countersell++;
-            sessionStorage.setItem('countersell',countersell);
+            sessionStorage.setItem('countersell','1');
             console.log("sell order open "+closingPrice+" "+date);
             sellOpenOrderBoolean = false; sellCloseOrderBoolean = true;
             sessionStorage.setItem('sellOpenOrderBoolean','false');
@@ -259,17 +260,16 @@ function startWebSocket(socket,streamName)
             if(parseInt(sessionStorage.getItem('currentCloseTime'))!==0)
             {
                 sessionStorage.setItem('readyForTrading','true');
+                counterbuy = 0;sessionStorage.setItem('counterbuy',counterbuy);
+                countersell = 0;sessionStorage.setItem('countersell',countersell);
             }
             
             buyOpenOrderBoolean = true;     buyCloseOrderBoolean = false;
             sellOpenOrderBoolean = true;    sellCloseOrderBoolean = false;
-            counterbuy=0;                   countersell=0;
             sessionStorage.setItem('buyOpenOrderBoolean',buyOpenOrderBoolean);
             sessionStorage.setItem('buyCloseOrderBoolean',buyCloseOrderBoolean);
             sessionStorage.setItem('sellOpenOrderBoolean',sellOpenOrderBoolean);
             sessionStorage.setItem('sellCloseOrderBoolean',sellCloseOrderBoolean);
-            sessionStorage.setItem('counterbuy',counterbuy);
-            sessionStorage.setItem('countersell',countersell);
             
             loadDataWebSocket();
             lowestATR = parseFloat(sessionStorage.getItem('ATR_SMAs_Array'));//obtener minimo ATR
