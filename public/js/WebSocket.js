@@ -185,12 +185,14 @@ function startWebSocket(socket,streamName)
     if(localStorage.getItem('buyOrderOpenMin')!==null){buyOrderOpenMin=parseFloat(localStorage.getItem('buyOrderOpenMin'));}
     if(localStorage.getItem('buyOrderClose')!==null){buyOrderClose=parseFloat(localStorage.getItem('buyOrderClose'));}
     if(localStorage.getItem('counterbuy')!==null){counterbuy=parseInt(localStorage.getItem('counterbuy'));}
+    if(localStorage.getItem('buyOpenOrderBoolean')!==null){buyOpenOrderBoolean=eval(localStorage.getItem('buyOpenOrderBoolean'));}
     if(localStorage.getItem('buyCloseOrderBoolean')!==null){buyCloseOrderBoolean=eval(localStorage.getItem('buyCloseOrderBoolean'));}
 
     if(localStorage.getItem('sellOrderOpenMin')!==null){sellOrderOpenMin=parseFloat(localStorage.getItem('sellOrderOpenMin'));}
     if(localStorage.getItem('sellOrderClose')!==null){sellOrderClose=parseFloat(localStorage.getItem('sellOrderClose'));}
     if(localStorage.getItem('countersell')!==null){countersell=parseInt(localStorage.getItem('countersell'));}
-    if(localStorage.getItem('sellCloseOrderBoolean')!==null){sellCloseOrderBooelan=eval(localStorage.getItem('sellCloseOrderBoolean'));}
+    if(localStorage.getItem('sellOpenOrderBoolean')!==null){sellOpenOrderBoolean=eval(localStorage.getItem('sellOpenOrderBoolean'));}
+    if(localStorage.getItem('sellCloseOrderBoolean')!==null){sellCloseOrderBoolean=eval(localStorage.getItem('sellCloseOrderBoolean'));}
 
     if(localStorage.getItem('currentCloseTime')!==null){currentCloseTime=parseFloat(localStorage.getItem('currentCloseTime'));}
     if(localStorage.getItem('readyForTrading')!==null){readyForTrading=eval(localStorage.getItem('readyForTrading'));}
