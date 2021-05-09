@@ -227,16 +227,16 @@ function startWebSocket(socket,streamName)
             localStorage.setItem('counterbuy',counterbuy);
             console.log("buy order open "+closingPrice+" "+date);
             buyOpenOrderBoolean = false; buyCloseOrderBoolean = true;
-            localStorage.setItem('buyOpenOrderBoolean','false');
-            localStorage.setItem('buyCloseOrderBoolean','true');
+            localStorage.setItem('buyOpenOrderBoolean',buyOpenOrderBoolean);
+            localStorage.setItem('buyCloseOrderBoolean',buyCloseOrderBoolean);
             localStorage.setItem('counterbuy',counterbuy);
         }
         if(closingPrice>=buyOrderClose&&buyOrderClose!==0&&buyCloseOrderBoolean)
         {
             console.log("buy order close "+closingPrice+" "+date);
             buyOpenOrderBoolean = true; buyCloseOrderBoolean = false;
-            localStorage.setItem('buyOpenOrderBoolean','true');
-            localStorage.setItem('buyCloseOrderBoolean','false');
+            localStorage.setItem('buyOpenOrderBoolean',buyOpenOrderBoolean);
+            localStorage.setItem('buyCloseOrderBoolean',buyCloseOrderBoolean);
         }
         
         if(closingPrice<=sellOrderOpenMin&&sellOrderOpenMin!==0&&sellOpenOrderBoolean&&countersell===0)
@@ -245,16 +245,16 @@ function startWebSocket(socket,streamName)
             localStorage.setItem('countersell',countersell);
             console.log("sell order open "+closingPrice+" "+date);
             sellOpenOrderBoolean = false; sellCloseOrderBoolean = true;
-            localStorage.setItem('sellOpenOrderBoolean','false');
-            localStorage.setItem('sellCloseOrderBoolean','true');
+            localStorage.setItem('sellOpenOrderBoolean',sellOpenOrderBoolean);
+            localStorage.setItem('sellCloseOrderBoolean',sellCloseOrderBoolean);
             
         }
         if(closingPrice<=sellOrderClose&&sellOrderClose!==0&&sellCloseOrderBoolean)
         {
             console.log("sell order close "+closingPrice+" "+date);
             sellOpenOrderBoolean = true; sellCloseOrderBoolean = false;
-            localStorage.setItem('sellOpenOrderBoolean','true');
-            localStorage.setItem('sellCloseOrderBoolean','false');
+            localStorage.setItem('sellOpenOrderBoolean',sellOpenOrderBoolean);
+            localStorage.setItem('sellCloseOrderBoolean',sellCloseOrderBoolean);
         }
   
         if(currentDate>currentCloseTime)
