@@ -200,6 +200,8 @@ function startWebSocket(socket,streamName)
     if(localStorage.getItem('currentCloseTime')!==null){currentCloseTime=parseFloat(localStorage.getItem('currentCloseTime'));}
     if(localStorage.getItem('readyForTrading')!==null){readyForTrading=eval(localStorage.getItem('readyForTrading'));}
     
+    console.log(buyOrderClose+' '+sellOrderClose);
+    
     socket.onopen = function(event) 
     {
         var date = new Date();
