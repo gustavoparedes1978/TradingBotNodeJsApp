@@ -30,13 +30,31 @@
  
  /* 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M */
 
+var buyOrderOpenMin = 0;
+var buyOrderClose = 0;
+var sellOrderOpenMin = 0;
+var sellOrderClose = 0;
+
+var lowestATR = 0;
+
+var buyOpenOrderBoolean = true;
+var buyCloseOrderBoolean = false;
+var counterbuy = 0;
+
+var sellOpenOrderBoolean = true;
+var sellCloseOrderBoolean = false;
+var countersell = 0;
+
+var currentCloseTime = 0;
+var readyForTrading = false;
+
 var interval = localStorage.getItem('interval');
 var symbol = localStorage.getItem('symbol');
 var symbolStream = "btcusdt";
 var stream = "@kline_"+interval;
 var streamName = symbolStream+stream;
 let socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
-socket = startWebSocket(socket,streamName);
+startWebSocket(socket,streamName);
 
 function loadDataWebSocket()
 {
@@ -162,26 +180,11 @@ function loadDataWebSocket()
     xhttpRequest.send();
 }
 
-var buyOrderOpenMin = 0;
-var buyOrderClose = 0;
-var sellOrderOpenMin = 0;
-var sellOrderClose = 0;
 
-var lowestATR = 0;
-
-var buyOpenOrderBoolean = true;
-var buyCloseOrderBoolean = false;
-var counterbuy = 0;
-
-var sellOpenOrderBoolean = true;
-var sellCloseOrderBoolean = false;
-var countersell = 0;
-
-var currentCloseTime = 0;
-var readyForTrading = false;
 
 function startWebSocket(socket,streamName)
 {
+    
     if(localStorage.getItem('buyOrderOpenMin')!==null){buyOrderOpenMin=parseFloat(localStorage.getItem('buyOrderOpenMin'));}
     if(localStorage.getItem('buyOrderClose')!==null){buyOrderClose=parseFloat(localStorage.getItem('buyOrderClose'));}
     if(localStorage.getItem('counterbuy')!==null){counterbuy=parseInt(localStorage.getItem('counterbuy'));}
@@ -335,7 +338,5 @@ function startWebSocket(socket,streamName)
         console.log(`[error] ${error.message}`);
         location.reload();
     };
-    
-return socket;
 
 }
