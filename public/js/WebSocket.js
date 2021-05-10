@@ -315,6 +315,10 @@ function startWebSocket(socket,streamName)
                 localStorage.setItem('buyOrderClose',buyOrderClose);
                 localStorage.setItem('sellOrderOpenMin',sellOrderOpenMin);
                 localStorage.setItem('sellOrderClose',sellOrderClose);
+                
+                readyForTrading = false;
+                localStorage.setItem('readyForTrading',readyForTrading);
+                
             }
             localStorage.setItem('currentCloseTime',candle.k.T);
             currentCloseTime = candle.k.T;
