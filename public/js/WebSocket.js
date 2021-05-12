@@ -31,9 +31,9 @@
  /* 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M */
 
 var buyOrderOpenMin = 0;
-var buyOrderClose = 0;
+var buyOrderClose = [0,0];
 var sellOrderOpenMin = 0;
-var sellOrderClose = 0;
+var sellOrderClose = [0,0];
 
 var lowestATR = 0;
 
@@ -186,14 +186,18 @@ function startWebSocket(socket,streamName)
 {
     
     if(localStorage.getItem('buyOrderOpenMin')!==null){buyOrderOpenMin=parseFloat(localStorage.getItem('buyOrderOpenMin'));}
-    if(localStorage.getItem('buyOrderClose')!==null){buyOrderClose=parseFloat(localStorage.getItem('buyOrderClose'));}
+    if(localStorage.getItem('buyOrderClose0')!==null){buyOrderClose[0]=parseFloat(localStorage.getItem('buyOrderClose0'));}
+    if(localStorage.getItem('buyOrderClose1')!==null){buyOrderClose[1]=parseFloat(localStorage.getItem('buyOrderClose1'));}
     if(localStorage.getItem('counterbuy')!==null){counterbuy=parseInt(localStorage.getItem('counterbuy'));}
+    
     if(localStorage.getItem('buyOpenOrderBoolean')!==null){buyOpenOrderBoolean=eval(localStorage.getItem('buyOpenOrderBoolean'));}
     if(localStorage.getItem('buyCloseOrderBoolean')!==null){buyCloseOrderBoolean=eval(localStorage.getItem('buyCloseOrderBoolean'));}
 
     if(localStorage.getItem('sellOrderOpenMin')!==null){sellOrderOpenMin=parseFloat(localStorage.getItem('sellOrderOpenMin'));}
-    if(localStorage.getItem('sellOrderClose')!==null){sellOrderClose=parseFloat(localStorage.getItem('sellOrderClose'));}
+    if(localStorage.getItem('sellOrderClose0')!==null){sellOrderClose[0]=parseFloat(localStorage.getItem('sellOrderClose0'));}
+    if(localStorage.getItem('sellOrderClose1')!==null){sellOrderClose[1]=parseFloat(localStorage.getItem('sellOrderClose1'));}   
     if(localStorage.getItem('countersell')!==null){countersell=parseInt(localStorage.getItem('countersell'));}
+    
     if(localStorage.getItem('sellOpenOrderBoolean')!==null){sellOpenOrderBoolean=eval(localStorage.getItem('sellOpenOrderBoolean'));}
     if(localStorage.getItem('sellCloseOrderBoolean')!==null){sellCloseOrderBoolean=eval(localStorage.getItem('sellCloseOrderBoolean'));}
 
@@ -216,7 +220,8 @@ function startWebSocket(socket,streamName)
     socket.onmessage = function(event) 
     {
         var date = new Date();
-        console.log('socket state onmessage '+socket.readyState+' '+date);
+        console.log('socket state onmessage '+socket.readyState+' '+date+' '+readyForTrading);
+        
         if(localStorage.getItem('currentCloseTime')!==null)
         {
             currentCloseTime = parseInt(localStorage.getItem('currentCloseTime'));
@@ -236,7 +241,7 @@ function startWebSocket(socket,streamName)
             localStorage.setItem('buyCloseOrderBoolean',buyCloseOrderBoolean);
             localStorage.setItem('counterbuy',counterbuy);
         }
-        if(closingPrice>=buyOrderClose&&buyOrderClose!==0&&buyCloseOrderBoolean)
+        if((closingPrice>=buyOrderClose[0]||closingPrice>=buyOrderClose[1])&&buyOrderClose[0]!==0&&buyCloseOrderBoolean)
         {
             console.log("buy order close "+closingPrice+" "+date);
             buyOpenOrderBoolean = true; buyCloseOrderBoolean = false;
@@ -252,9 +257,9 @@ function startWebSocket(socket,streamName)
             sellOpenOrderBoolean = false; sellCloseOrderBoolean = true;
             localStorage.setItem('sellOpenOrderBoolean',sellOpenOrderBoolean);
             localStorage.setItem('sellCloseOrderBoolean',sellCloseOrderBoolean);
-            
         }
-        if(closingPrice<=sellOrderClose&&sellOrderClose!==0&&sellCloseOrderBoolean)
+        
+        if((closingPrice<=sellOrderClose[0]||closingPrice<=sellOrderClose[1])&&sellOrderClose[0]!==0&&sellCloseOrderBoolean)
         {
             console.log("sell order close "+closingPrice+" "+date);
             sellOpenOrderBoolean = true; sellCloseOrderBoolean = false;
@@ -282,15 +287,17 @@ function startWebSocket(socket,streamName)
             
             loadDataWebSocket();
             lowestATR = parseFloat(localStorage.getItem('ATR_SMAs_Array'));//obtener minimo ATR
-            console.log('closeTime '+localStorage.getItem('currentCloseTime'));
-
+            console.log('closeTime '+currentCloseTime);
+            console.log('lowestATR '+lowestATR);  
+    
             currentPrice = closingPrice;
             console.log('currentPrice '+currentPrice);
             
             if(readyForTrading)
             {
+                buyOrderClose[0] = buyOrderClose[1];
                 buyOrderOpenMin = currentPrice + lowestATR*0.80;
-                buyOrderClose = currentPrice + lowestATR;
+                buyOrderClose[1] = currentPrice + lowestATR;
                 
                 var div = buyOrderOpenMin/buyOrderClose;
                 var diff2 = currentPrice - buyOrderClose;
@@ -300,8 +307,10 @@ function startWebSocket(socket,streamName)
                 console.log('division '+div);
                 console.log(Math.abs(1 - div));
                 
+                sellOrderClose[0] = sellOrderClose[1];
                 sellOrderOpenMin = currentPrice - lowestATR*0.80;
                 sellOrderClose = currentPrice - lowestATR;
+                sellOrderClose[1] = currentPrice - lowestATR;
             
                 div = sellOrderOpenMin/sellOrderClose;
                 var diff2 = currentPrice - sellOrderClose;
@@ -312,16 +321,19 @@ function startWebSocket(socket,streamName)
                 console.log(Math.abs(1 - div));
                 
                 localStorage.setItem('buyOrderOpenMin',buyOrderOpenMin);
-                localStorage.setItem('buyOrderClose',buyOrderClose);
+                localStorage.setItem('buyOrderClose0',buyOrderClose[0]);
+                localStorage.setItem('buyOrderClose1',buyOrderClose[1]);
                 localStorage.setItem('sellOrderOpenMin',sellOrderOpenMin);
-                localStorage.setItem('sellOrderClose',sellOrderClose);
+                localStorage.setItem('sellOrderClose0',sellOrderClose[0]);
+                localStorage.setItem('sellOrderClose1',sellOrderClose[1]);
                 
                 readyForTrading = false;
                 localStorage.setItem('readyForTrading',readyForTrading);
                 
             }
-            localStorage.setItem('currentCloseTime',candle.k.T);
-            currentCloseTime = candle.k.T;
+            currentCloseTime = candle.k.T - 7.2e+6;
+            localStorage.setItem('currentCloseTime',currentCloseTime);
+            console.log('closeTime next '+currentCloseTime);
         }
     };
 

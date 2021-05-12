@@ -10,5 +10,8 @@
     ],
     "author": "ZZGustavoP",
     "contributors": [],
-    "dependencies": {}
+    "dependencies": {
+        "websocket": "^1.0.34",
+        "xmlhttprequest": "^1.8.0"
+    }
 }
