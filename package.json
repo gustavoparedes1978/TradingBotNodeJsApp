@@ -13,5 +13,8 @@
     "dependencies": {
         "websocket": "^1.0.34",
         "xmlhttprequest": "^1.8.0"
-    }
+    },
+	"scripts": {
+		"start": "node main.js"
+	}
 }
