@@ -156,4 +156,3 @@ var breakPointText = document.getElementById("breakPointText").checked;
 var breakPointTooltips = document.getElementById("breakPointTooltips").checked;
 var rangeTooltips = document.getElementById("rangeTooltips").checked;
 var animation = document.getElementById("animation").checked;
-

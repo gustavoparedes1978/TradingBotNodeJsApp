@@ -1,5 +1,4 @@
 function KagiChart(data,chart_options){
-    console.log('kagichart');
     var inputData = data;
     var reversalType = chart_options["reversalType"];
     var reversalValue = chart_options["reversalValue"];

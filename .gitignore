@@ -76,3 +76,7 @@ typings/
 .fusebox/
 
 desktop.ini
+Command Prompt.lnk
+ejecutableNodeJs.bat
+nbproject/private/private.xml
+public/nodejsbat.bat
