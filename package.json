@@ -11,10 +11,11 @@
     "author": "ZZGustavoP",
     "contributors": [],
     "dependencies": {
+        "ping": "^0.4.1",
         "websocket": "^1.0.34",
         "xmlhttprequest": "^1.8.0"
     },
-	"scripts": {
-		"start": "node main.js"
-	}
+    "scripts": {
+        "start": "node main.js"
+    }
 }

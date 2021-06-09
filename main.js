@@ -7,10 +7,9 @@
 var http = require("http");
 var url = require("url");
 var fs = require("fs");
-
-function createServer()
-{    
-    http.createServer(function (req, res) {
+var ping = require("ping");
+ 
+http.createServer(function (req, res) {
         var q = url.parse(req.url, true);
         //console.log(q.pathname);
         var filename = q.pathname;
@@ -63,10 +62,8 @@ function createServer()
         });
     
     }).listen(process.env.PORT || 5000);
-}
 
-createServer();    
-setInterval(createServer,1.2e+6); 
+
 
 
 /* 
@@ -441,3 +438,18 @@ function startWebSocket(socket,streamName)
     };
 
 }
+
+function pingFunction()
+{
+    var hosts = ['https://radiant-headland-62259.herokuapp.com/'];
+    hosts.forEach(function(host){
+        ping.sys.probe(host, function(isAlive){
+        var msg = isAlive ? 'host ' + host + ' is alive' : 'host ' + host + ' is dead';
+        console.log(msg);
+        });
+    });
+}
+
+pingFunction();
+setInterval(pingFunction,1.2e+6);
+
