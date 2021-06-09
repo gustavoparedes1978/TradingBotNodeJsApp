@@ -338,7 +338,7 @@ function startWebSocket(socket,streamName)
             {
                 console.log("buy order open on sell "+closingPrice+" "+date);
                 console.log("low "+low);
-                lowestATRFractionSellTwo = closingPrice + lowestATR*0.2;
+                lowestATRFractionSellTwo = closingPrice + lowestATR*0.1;
                 console.log("lowestATRFractionSellTwo "+lowestATRFractionSellTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
@@ -367,7 +367,7 @@ function startWebSocket(socket,streamName)
             {
                 console.log("sell order open on buy "+closingPrice+" "+date);
                 console.log("high "+high);
-                lowestATRFractionBuyTwo = closingPrice - lowestATR*0.2;
+                lowestATRFractionBuyTwo = closingPrice - lowestATR*0.1;
                 console.log("lowestATRFractionBuyTwo "+lowestATRFractionBuyTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
