@@ -441,7 +441,7 @@ function startWebSocket(socket,streamName)
 
 function pingFunction()
 {
-    var hosts = ['radiant-headland-62259.herokuapp.com'];
+    var hosts = ['localhost'];
     hosts.forEach(function(host){
         ping.sys.probe(host, function(isAlive){
         var msg = isAlive ? 'host ' + host + ' is alive' : 'host ' + host + ' is dead';
@@ -451,5 +451,5 @@ function pingFunction()
 }
 
 pingFunction();
-setInterval(pingFunction,1.2e+6);
+setInterval(pingFunction,5000);
 
