@@ -7,7 +7,6 @@
 var http = require("http");
 var url = require("url");
 var fs = require("fs");
-var ping = require("ping");
  
 http.createServer(function (req, res) {
         var q = url.parse(req.url, true);
@@ -438,7 +437,7 @@ function startWebSocket(socket,streamName)
     };
 
 }
-
+/*
 function pingFunction()
 {
     var hosts = ['radiant-headland-62259.herokuapp.com'];
@@ -452,4 +451,11 @@ function pingFunction()
 
 pingFunction();
 setInterval(pingFunction,5000);
+ * */
+ 
+ const ping = require('node-http-ping');
+ 
+ ping('https://radiant-headland-62259.herokuapp.com')
+  .then(time => console.log(`Response time: ${time}ms`))
+  .catch(() => console.log('Failed to ping'));
 
