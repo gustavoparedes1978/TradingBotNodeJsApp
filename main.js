@@ -8,6 +8,7 @@ var http = require("http");
 var url = require("url");
 var fs = require("fs");
 
+setInterval(function(){ 
 http.createServer(function (req, res) {
     var q = url.parse(req.url, true);
     //console.log(q.pathname);
@@ -61,6 +62,7 @@ http.createServer(function (req, res) {
     });
     
 }).listen(process.env.PORT || 5000);
+}, 1.2e+6);
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
