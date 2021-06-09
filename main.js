@@ -437,25 +437,14 @@ function startWebSocket(socket,streamName)
     };
 
 }
-/*
-function pingFunction()
-{
-    var hosts = ['radiant-headland-62259.herokuapp.com'];
-    hosts.forEach(function(host){
-        ping.sys.probe(host, function(isAlive){
-        var msg = isAlive ? 'host ' + host + ' is alive' : 'host ' + host + ' is dead';
-        console.log(msg);
-        });
-    });
-}
 
-pingFunction();
-setInterval(pingFunction,5000);
- * */
- 
  const ping = require('node-http-ping');
  
+ function pingFunction(){
  ping('https://radiant-headland-62259.herokuapp.com')
-  .then(time => console.log(`Response time: ${time}ms`))
+  .then(time => console.log(`Response time: ${time} ms`))
   .catch(() => console.log('Failed to ping'));
-
+ }
+ 
+pingFunction();
+setInterval(pingFunction,1.2e+6);
