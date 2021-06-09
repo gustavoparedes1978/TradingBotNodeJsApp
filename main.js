@@ -303,7 +303,7 @@ function startWebSocket(socket,streamName)
         counter++;
         
         var lowestATRFractionMin = lowestATR*0.1;
-        var lowestATRFractionMax= lowestATR*0.3;
+        var lowestATRFractionMax = lowestATR*0.2;
         
         var low = parseFloat(candle.k.l); //calculating lowest of time period
         var closingPriceMinusLow = Math.abs(closingPrice - low);
@@ -320,12 +320,12 @@ function startWebSocket(socket,streamName)
         {
             var prom = (high-low)/5;
             var lowestATRhalf = lowestATR/5;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
             {
                 console.log("sell order open "+closingPrice+" "+date);
                 console.log("buyingAttempts "+buyingAttempts+" sellingAttempts "+sellingAttempts);
                 console.log("high "+high);
-                lowestATRFractionBuyTwo = closingPrice - lowestATR*0.2;
+                lowestATRFractionBuyTwo = closingPrice - lowestATR*0.1;
                 console.log("lowestATRFractionBuyTwo "+lowestATRFractionBuyTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
@@ -334,7 +334,7 @@ function startWebSocket(socket,streamName)
             }
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
             {
                 console.log("buy order open on sell "+closingPrice+" "+date);
                 console.log("low "+low);
@@ -350,11 +350,11 @@ function startWebSocket(socket,streamName)
         {
             var prom = (high-low)/5; 
             var lowestATRhalf = lowestATR/5;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
             {
                 console.log("buy order open "+closingPrice+" "+date);
                 console.log("low "+low);
-                lowestATRFractionSellTwo = closingPrice + lowestATR*0.2;
+                lowestATRFractionSellTwo = closingPrice + lowestATR*0.1;
                 console.log("lowestATRFractionSellTwo "+lowestATRFractionSellTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
@@ -363,7 +363,7 @@ function startWebSocket(socket,streamName)
             }
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
             {
                 console.log("sell order open on buy "+closingPrice+" "+date);
                 console.log("high "+high);
