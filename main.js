@@ -441,7 +441,7 @@ function startWebSocket(socket,streamName)
 
 function pingFunction()
 {
-    var hosts = ['https://radiant-headland-62259.herokuapp.com/'];
+    var hosts = ['radiant-headland-62259.herokuapp.com'];
     hosts.forEach(function(host){
         ping.sys.probe(host, function(isAlive){
         var msg = isAlive ? 'host ' + host + ' is alive' : 'host ' + host + ' is dead';
