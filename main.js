@@ -447,4 +447,4 @@ function startWebSocket(socket,streamName)
  }
  
 pingFunction();
-setInterval(pingFunction,1.2e+6);
+setInterval(pingFunction,6e+5);
