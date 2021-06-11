@@ -320,7 +320,7 @@ function startWebSocket(socket,streamName)
         {
             var prom = (high-low)/5;
             var lowestATRhalf = lowestATR/5;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
             {
                 console.log("sell order open "+closingPrice+" "+date);
                 console.log("buyingAttempts "+buyingAttempts+" sellingAttempts "+sellingAttempts);
@@ -350,7 +350,7 @@ function startWebSocket(socket,streamName)
         {
             var prom = (high-low)/5; 
             var lowestATRhalf = lowestATR/5;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
             {
                 console.log("buy order open "+closingPrice+" "+date);
                 console.log("low "+low);
