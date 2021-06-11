@@ -323,7 +323,7 @@ function startWebSocket(socket,streamName)
             if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
             {
                 console.log("sell order open "+closingPrice+" "+date);
-                console.log("buyingAttempts "+buyingAttempts+" sellingAttempts "+sellingAttempts);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 console.log("high "+high);
                 lowestATRFractionBuyTwo = closingPrice - lowestATR*0.2;
                 console.log("lowestATRFractionBuyTwo "+lowestATRFractionBuyTwo);
@@ -334,16 +334,17 @@ function startWebSocket(socket,streamName)
             }
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
             {
-                console.log("buy order open on sell "+closingPrice+" "+date);
-                console.log("low "+low);
-                lowestATRFractionSellTwo = closingPrice + lowestATR*0.1;
-                console.log("lowestATRFractionSellTwo "+lowestATRFractionSellTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
-                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
-                limitNumberBuyingOrders++;
+                console.log("sell order open on buy "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                console.log("high "+high);
+                lowestATRFractionBuyTwo = closingPrice - lowestATR*0.1;
+                console.log("lowestATRFractionBuyTwo "+lowestATRFractionBuyTwo);
+                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
+                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
+                sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
+                limitNumberSellingOrders++;
             }
         }
         if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction&&sellOpenOrderFractionBoolean)
@@ -353,6 +354,7 @@ function startWebSocket(socket,streamName)
             if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
             {
                 console.log("buy order open "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 console.log("low "+low);
                 lowestATRFractionSellTwo = closingPrice + lowestATR*0.2;
                 console.log("lowestATRFractionSellTwo "+lowestATRFractionSellTwo);
@@ -363,16 +365,17 @@ function startWebSocket(socket,streamName)
             }
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
             {
-                console.log("sell order open on buy "+closingPrice+" "+date);
-                console.log("high "+high);
-                lowestATRFractionBuyTwo = closingPrice - lowestATR*0.1;
-                console.log("lowestATRFractionBuyTwo "+lowestATRFractionBuyTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
-                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
-                sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
-                limitNumberSellingOrders++;
+                console.log("buy order open on sell "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                console.log("low "+low);
+                lowestATRFractionSellTwo = closingPrice + lowestATR*0.1;
+                console.log("lowestATRFractionSellTwo "+lowestATRFractionSellTwo);
+                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
+                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
+                limitNumberBuyingOrders++;
             }
         }
         if(limitNumberSellingOrders===2){limitNumberBuyingOrders=0;limitNumberSellingOrders++;}
@@ -385,6 +388,7 @@ function startWebSocket(socket,streamName)
                 sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
                 buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
                 console.log("buy order close "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 buyOrders.splice(index,1);
                 balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
                 console.log('Balance '+balance);
@@ -396,9 +400,10 @@ function startWebSocket(socket,streamName)
             var localClosePrice = item.closePrice;
             if((closingPrice<=localClosePrice)&&readyForTradingFraction&&sellCloseOrderFractionBoolean)
             {
-                console.log("sell order close "+closingPrice+" "+date);
                 sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
                 buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
+                console.log("sell order close "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 sellOrders.splice(index,1); 
                 balance = balance*10*((localOpenPrice / closingPrice)-1-0.00075) + balance;
                 console.log('Balance '+balance);
