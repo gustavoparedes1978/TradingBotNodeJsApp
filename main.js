@@ -326,7 +326,7 @@ function startWebSocket(socket,streamName)
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 console.log("high "+high);
                 lowestATRFractionBuyTwo = closingPrice - lowestATR*0.2;
-                console.log("lowestATRFractionBuyTwo "+lowestATRFractionBuyTwo);
+                console.log("closePrice "+lowestATRFractionBuyTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
                 sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
@@ -340,7 +340,7 @@ function startWebSocket(socket,streamName)
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 console.log("high "+high);
                 lowestATRFractionBuyTwo = closingPrice - lowestATR*0.1;
-                console.log("lowestATRFractionBuyTwo "+lowestATRFractionBuyTwo);
+                console.log("closePrice "+lowestATRFractionBuyTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
                 sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
@@ -357,7 +357,7 @@ function startWebSocket(socket,streamName)
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 console.log("low "+low);
                 lowestATRFractionSellTwo = closingPrice + lowestATR*0.2;
-                console.log("lowestATRFractionSellTwo "+lowestATRFractionSellTwo);
+                console.log("closePrice "+lowestATRFractionSellTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
                 buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
@@ -371,7 +371,7 @@ function startWebSocket(socket,streamName)
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 console.log("low "+low);
                 lowestATRFractionSellTwo = closingPrice + lowestATR*0.1;
-                console.log("lowestATRFractionSellTwo "+lowestATRFractionSellTwo);
+                console.log("closePrice "+lowestATRFractionSellTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
                 buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
