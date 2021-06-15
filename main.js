@@ -333,7 +333,7 @@ function startWebSocket(socket,streamName)
                 limitNumberSellingOrders++;
             }
         }
-        if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction&&sellOpenOrderFractionBoolean)
+        if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction)
         {
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
