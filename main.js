@@ -311,7 +311,7 @@ function startWebSocket(socket,streamName)
         var high = parseFloat(candle.k.h); //calculating highest of time period
         var closingPriceMinusHigh = Math.abs(closingPrice - high);
         
-        const buyingSellingLimit = 50;
+        const buyingSellingLimit = 25;
         
         var diffBuyingAttempts = buyingAttempts-lowestBuyingAttempts;
         var diffSellingAttempts = sellingAttempts-lowestSellingAttempts;
