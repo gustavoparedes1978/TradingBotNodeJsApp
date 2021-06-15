@@ -318,8 +318,8 @@ function startWebSocket(socket,streamName)
         var date = new Date();
         if((closingPriceMinusHigh>=lowestATRFractionMin&&closingPriceMinusHigh<=lowestATRFractionMax)&&readyForTradingFraction)
         {
-            var prom = (high-low)/5;
-            var lowestATRhalf = lowestATR/5;
+            var prom = (high-low)/10;
+            var lowestATRhalf = lowestATR/10;
             if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
             {
                 console.log("sell order open "+closingPrice+" "+date);
@@ -349,8 +349,8 @@ function startWebSocket(socket,streamName)
         }
         if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction&&sellOpenOrderFractionBoolean)
         {
-            var prom = (high-low)/5; 
-            var lowestATRhalf = lowestATR/5;
+            var prom = (high-low)/10; 
+            var lowestATRhalf = lowestATR/10;
             if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
             {
                 console.log("buy order open "+closingPrice+" "+date);
