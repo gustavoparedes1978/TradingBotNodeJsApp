@@ -332,6 +332,18 @@ function startWebSocket(socket,streamName)
                 sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
                 limitNumberSellingOrders++;
             }
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
+            {
+                console.log("sell order open "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                console.log("high "+high);
+                lowestATRFractionBuyTwo = closingPrice - lowestATR*0.15;
+                console.log("closePrice "+lowestATRFractionBuyTwo);
+                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
+                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
+                sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
+                limitNumberSellingOrders++;
+            }
         }
         if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction)
         {
@@ -340,6 +352,18 @@ function startWebSocket(socket,streamName)
             if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
             {
                 console.log("buy order open on sell "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                console.log("low "+low);
+                lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
+                console.log("closePrice "+lowestATRFractionSellTwo);
+                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
+                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
+                limitNumberBuyingOrders++;
+            }
+            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<2)
+            {
+                console.log("buy order open "+closingPrice+" "+date);
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 console.log("low "+low);
                 lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
