@@ -181,7 +181,6 @@ function loadDataWebSocket()
             var date = new Date();
             console.log('ATR_SMAs_Array '+ATR_SMAs_Array[0]+' '+date);
 
-
             var data = [];
             for(x = 0; x<array.length-1;x++)
                 {
@@ -311,7 +310,7 @@ function startWebSocket(socket,streamName)
         var high = parseFloat(candle.k.h); //calculating highest of time period
         var closingPriceMinusHigh = Math.abs(closingPrice - high);
         
-        const buyingSellingLimit = 25;
+        const buyingSellingLimit = 0;
         
         var diffBuyingAttempts = buyingAttempts-lowestBuyingAttempts;
         var diffSellingAttempts = sellingAttempts-lowestSellingAttempts;
@@ -428,7 +427,6 @@ function startWebSocket(socket,streamName)
         socket = new W3CWebSocket("wss://stream.binance.com:9443/ws/"+streamName);
         startWebSocket(socket,streamName);
     };
-
     socket.onerror = function(error) {
         var date = new Date();
         console.log('socket state onerror '+socket.readyState+' '+date);
