@@ -131,7 +131,6 @@ var streamName = symbolStream+stream;
 
 var balance = 20000;
 var lastClosingPrice = 0;
-var counter = 0;
 
 var W3CWebSocket = require('websocket').w3cwebsocket;
 
@@ -299,18 +298,14 @@ function startWebSocket(socket,streamName)
             if(sellingAttempts<lowestBuyingAttempts){lowestBuyingAttempts = buyingAttempts;}
         }
         
-        counter++;
-        
-        var lowestATRFractionMin = lowestATR*0.0;
-        var lowestATRFractionMax = lowestATR*1;
+        var lowestATRFractionMin = 0;
+        var lowestATRFractionMax = lowestATR;
         
         var low = parseFloat(candle.k.l); //calculating lowest of time period
         var closingPriceMinusLow = Math.abs(closingPrice - low);
         
         var high = parseFloat(candle.k.h); //calculating highest of time period
         var closingPriceMinusHigh = Math.abs(closingPrice - high);
-        
-        const buyingSellingLimit = 0;
         
         var diffBuyingAttempts = buyingAttempts-lowestBuyingAttempts;
         var diffSellingAttempts = sellingAttempts-lowestSellingAttempts;
@@ -319,7 +314,7 @@ function startWebSocket(socket,streamName)
         {
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
+            if(prom>=lowestATRhalf&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
             {
                 console.log("sell order open on buy "+closingPrice+" "+date);
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
@@ -331,7 +326,7 @@ function startWebSocket(socket,streamName)
                 sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
                 limitNumberSellingOrders++;
             }
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
+            if(prom>=lowestATRhalf&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
             {
                 console.log("sell order open "+closingPrice+" "+date);
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
@@ -348,7 +343,30 @@ function startWebSocket(socket,streamName)
         {
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            
+            if(prom>=lowestATRhalf&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<1)
+            {
+                console.log("buy order open on sell "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                console.log("low "+low);
+                lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
+                console.log("closePrice "+lowestATRFractionSellTwo);
+                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
+                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
+                limitNumberBuyingOrders++;
+            }
+            if(prom>=lowestATRhalf&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<1)
+            {
+                console.log("buy order open "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                console.log("low "+low);
+                lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
+                console.log("closePrice "+lowestATRFractionSellTwo);
+                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
+                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
+                limitNumberBuyingOrders++;
+            }
         }
         if(limitNumberSellingOrders===1){limitNumberBuyingOrders=1;}
         if(limitNumberBuyingOrders===1){limitNumberSellingOrders=1;}
@@ -364,7 +382,7 @@ function startWebSocket(socket,streamName)
                 buyOrders.splice(index,1);
                 balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
                 console.log('Balance '+balance);
-                counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
+                sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             }
         });
         sellOrders.forEach(function(item,index){ 
@@ -379,7 +397,7 @@ function startWebSocket(socket,streamName)
                 sellOrders.splice(index,1); 
                 balance = balance*10*((localOpenPrice / closingPrice)-1-0.00075) + balance;
                 console.log('Balance '+balance);
-                counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
+                sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             }
         });
         if(currentDate>currentCloseTime)
@@ -388,7 +406,7 @@ function startWebSocket(socket,streamName)
             currentCloseTime = candle.k.T;
             loadDataWebSocket();
             lastClosingPrice = parseFloat(candle.k.c);
-            counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
+            sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             limitNumberBuyingOrders=0;
             limitNumberSellingOrders=0;
         }
