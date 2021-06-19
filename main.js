@@ -301,8 +301,8 @@ function startWebSocket(socket,streamName)
         
         counter++;
         
-        var lowestATRFractionMin = lowestATR*0.1;
-        var lowestATRFractionMax = lowestATR*0.5;
+        var lowestATRFractionMin = lowestATR*0.0;
+        var lowestATRFractionMax = lowestATR*1;
         
         var low = parseFloat(candle.k.l); //calculating lowest of time period
         var closingPriceMinusLow = Math.abs(closingPrice - low);
