@@ -348,33 +348,10 @@ function startWebSocket(socket,streamName)
         {
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<1)
-            {
-                console.log("buy order open on sell "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                console.log("low "+low);
-                lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
-                console.log("closePrice "+lowestATRFractionSellTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
-                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
-                limitNumberBuyingOrders++;
-            }
-            if(prom>=lowestATRhalf&&counter>=buyingSellingLimit&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<1)
-            {
-                console.log("buy order open "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                console.log("low "+low);
-                lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
-                console.log("closePrice "+lowestATRFractionSellTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
-                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
-                limitNumberBuyingOrders++;
-            }
+            
         }
-        if(limitNumberSellingOrders===1){limitNumberBuyingOrders=0;limitNumberSellingOrders++;}
-        if(limitNumberBuyingOrders===1){limitNumberSellingOrders=0;limitNumberBuyingOrders++;}
+        if(limitNumberSellingOrders===1){limitNumberBuyingOrders=1;}
+        if(limitNumberBuyingOrders===1){limitNumberSellingOrders=1;}
         buyOrders.forEach(function(item,index){
             var localOpenPrice = item.openPrice;
             var localClosePrice = item.closePrice;
@@ -412,28 +389,8 @@ function startWebSocket(socket,streamName)
             loadDataWebSocket();
             lastClosingPrice = parseFloat(candle.k.c);
             counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
-            buyOrders.forEach(function(item,index){
-                var localOpenPrice = item.openPrice;
-                sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
-                buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
-                console.log("buy order close "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                buyOrders.splice(index,1);
-                balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
-                console.log('Balance '+balance);
-                counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
-            });
-            sellOrders.forEach(function(item,index){
-                var localOpenPrice = item.openPrice;
-                sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
-                buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
-                console.log("sell order close "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                sellOrders.splice(index,1); 
-                balance = balance*10*((localOpenPrice / closingPrice)-1-0.00075) + balance;
-                console.log('Balance '+balance);
-                counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
-            });
+            limitNumberBuyingOrders=0;
+            limitNumberSellingOrders=0;
         }
     };
     socket.onclose = function(event) {
