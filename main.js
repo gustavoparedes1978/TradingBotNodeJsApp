@@ -413,6 +413,7 @@ function startWebSocket(socket,streamName)
             lastClosingPrice = parseFloat(candle.k.c);
             counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             buyOrders.forEach(function(item,index){
+                var localOpenPrice = item.openPrice;
                 sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
                 buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
                 console.log("buy order close "+closingPrice+" "+date);
@@ -422,7 +423,8 @@ function startWebSocket(socket,streamName)
                 console.log('Balance '+balance);
                 counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             });
-            sellOrders.forEach(function(item,index){ 
+            sellOrders.forEach(function(item,index){
+                var localOpenPrice = item.openPrice;
                 sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
                 buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
                 console.log("sell order close "+closingPrice+" "+date);
