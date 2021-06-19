@@ -412,6 +412,26 @@ function startWebSocket(socket,streamName)
             loadDataWebSocket();
             lastClosingPrice = parseFloat(candle.k.c);
             counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
+            buyOrders.forEach(function(item,index){
+                sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
+                buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
+                console.log("buy order close "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                buyOrders.splice(index,1);
+                balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
+                console.log('Balance '+balance);
+                counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
+            });
+            sellOrders.forEach(function(item,index){ 
+                sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
+                buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
+                console.log("sell order close "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                sellOrders.splice(index,1); 
+                balance = balance*10*((localOpenPrice / closingPrice)-1-0.00075) + balance;
+                console.log('Balance '+balance);
+                counter = 0; sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
+            });
         }
     };
     socket.onclose = function(event) {
