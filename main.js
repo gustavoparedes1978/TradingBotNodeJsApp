@@ -312,8 +312,8 @@ function startWebSocket(socket,streamName)
         var date = new Date();
         if((closingPriceMinusHigh>=lowestATRFractionMin&&closingPriceMinusHigh<=lowestATRFractionMax)&&readyForTradingFraction)
         {
-            prom = (high-low)/20;
-            lowestATRhalf = lowestATR/20;
+            prom = (high-low)/10;
+            lowestATRhalf = lowestATR/10;
             if(prom>=lowestATRhalf&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
             {
                 console.log("sell order open on buy "+closingPrice+" "+date);
@@ -326,6 +326,8 @@ function startWebSocket(socket,streamName)
                 sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
                 limitNumberSellingOrders++;
             }
+            prom = (high-low)/20;
+            lowestATRhalf = lowestATR/20;
             if(prom>=lowestATRhalf&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
             {
                 console.log("sell order open "+closingPrice+" "+date);
@@ -355,6 +357,8 @@ function startWebSocket(socket,streamName)
                 buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
                 limitNumberBuyingOrders++;
             }
+            prom = (high-low)/20;
+            lowestATRhalf = lowestATR/20;
             if(prom>=lowestATRhalf&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<1)
             {
                 console.log("buy order open "+closingPrice+" "+date);
