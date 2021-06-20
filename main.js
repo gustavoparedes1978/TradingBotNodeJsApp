@@ -294,7 +294,7 @@ function startWebSocket(socket,streamName)
         }
         
         if(closingPrice<lastClosingPrice){
-            sellingAttempts++;lastClosingPrice=closingPrice;buyingAttempts++;
+            sellingAttempts++;lastClosingPrice=closingPrice;buyingAttempts--;
             if(sellingAttempts<lowestBuyingAttempts){lowestBuyingAttempts = buyingAttempts;}
         }
         
