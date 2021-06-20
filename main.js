@@ -314,7 +314,7 @@ function startWebSocket(socket,streamName)
         {
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            if(prom>=lowestATRhalf&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
+            if(prom>=lowestATRhalf&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
             {
                 console.log("sell order open on buy "+closingPrice+" "+date);
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
@@ -328,7 +328,7 @@ function startWebSocket(socket,streamName)
             }
             prom = (high-low)/30;
             lowestATRhalf = lowestATR/30;
-            if(prom>=lowestATRhalf&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
+            if(prom>=lowestATRhalf&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<2) 
             {
                 console.log("sell order open "+closingPrice+" "+date);
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
@@ -372,8 +372,8 @@ function startWebSocket(socket,streamName)
                 limitNumberBuyingOrders++;
             }
         }
-        if(limitNumberSellingOrders===1){limitNumberBuyingOrders=1;}
-        if(limitNumberBuyingOrders===1){limitNumberSellingOrders=1;}
+        if(limitNumberSellingOrders===1){limitNumberBuyingOrders=0;}
+        if(limitNumberBuyingOrders===1){limitNumberSellingOrders=0;}
         buyOrders.forEach(function(item,index){
             var localOpenPrice = item.openPrice;
             var localClosePrice = item.closePrice;
