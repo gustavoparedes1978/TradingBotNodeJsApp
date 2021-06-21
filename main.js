@@ -343,7 +343,7 @@ function startWebSocket(socket,streamName)
         }
         if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction)
         {
-            /*prom = (high-low)/10;
+            prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
             if(prom>=lowestATRhalf&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<1)
             {
@@ -354,7 +354,7 @@ function startWebSocket(socket,streamName)
                 console.log("closePrice "+lowestATRFractionSellTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
+                buyOrders.push({"openPrice":closingPrice,"closePrice":closingPrice});
                 limitNumberBuyingOrders++;
             }
             prom = (high-low)/20;
@@ -368,9 +368,9 @@ function startWebSocket(socket,streamName)
                 console.log("closePrice "+lowestATRFractionSellTwo);
                 buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
+                buyOrders.push({"openPrice":closingPrice,"closePrice":closingPrice});
                 limitNumberBuyingOrders++;
-            }*/
+            }
         }
         if(limitNumberSellingOrders===1){limitNumberBuyingOrders=0;}
         if(limitNumberBuyingOrders===1){limitNumberSellingOrders=0;}
