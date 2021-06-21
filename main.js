@@ -388,7 +388,7 @@ function startWebSocket(socket,streamName)
                 console.log('Balance '+balance);
                 sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             }
-            var x = -10*balance*localOpenPrice/(-500 + 10.0075*balance);
+            var x = +10*balance*localOpenPrice/(-500 - 0.0025*balance);
             if(closingPrice<=x)
             {
                 console.log("buy order close stop loss "+closingPrice+" "+date);
@@ -410,16 +410,16 @@ function startWebSocket(socket,streamName)
                 console.log("sell order close "+closingPrice+" "+date);
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 sellOrders.splice(index,1); 
-                balance = balance*10*((localOpenPrice / closingPrice)-1-0.00075) + balance;
+                balance = balance*10*((localOpenPrice / closingPrice) - 1 - 0.00075) + balance;
                 console.log('Balance '+balance);
                 sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             }
-            var x = -10*balance*localOpenPrice/(-500 - 10.0075*balance);
+            var x = 10*balance*localOpenPrice/(-500 + 10.0075*balance);
             if(closingPrice>=x)
             {
                 console.log("sell order close stop loss "+closingPrice+" "+date);
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                buyOrders.splice(index,1);
+                sellOrders.splice(index,1);
                 balance = balance*10*((localOpenPrice / closingPrice)-1-0.00075) + balance;
                 console.log('Balance '+balance);
                 sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
