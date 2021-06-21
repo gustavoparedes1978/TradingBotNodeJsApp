@@ -389,6 +389,7 @@ function startWebSocket(socket,streamName)
                 sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             }
             var x = +10*balance*localOpenPrice/(-500 - 0.0025*balance);
+            console.log('x '+x);
             if(closingPrice<=x)
             {
                 console.log("buy order close stop loss "+closingPrice+" "+date);
@@ -415,6 +416,7 @@ function startWebSocket(socket,streamName)
                 sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             }
             var x = 10*balance*localOpenPrice/(-500 + 10.0075*balance);
+            console.log('x '+x);
             if(closingPrice>=x)
             {
                 console.log("sell order close stop loss "+closingPrice+" "+date);
