@@ -385,9 +385,8 @@ function startWebSocket(socket,streamName)
                 console.log("buy order close "+closingPrice+" "+date);
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 buyOrders.splice(index,1);
-                balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
+                //balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
                 console.log('Balance '+balance);
-                
             }
         });
         sellOrders.forEach(function(item,index){ 
