@@ -343,7 +343,7 @@ function startWebSocket(socket,streamName)
         }
         if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction)
         {
-            prom = (high-low)/10;
+            /*prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
             if(prom>=lowestATRhalf&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<1)
             {
@@ -370,7 +370,7 @@ function startWebSocket(socket,streamName)
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
                 buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
                 limitNumberBuyingOrders++;
-            }
+            }*/
         }
         if(limitNumberSellingOrders===1){limitNumberBuyingOrders=0;}
         if(limitNumberBuyingOrders===1){limitNumberSellingOrders=0;}
@@ -388,18 +388,6 @@ function startWebSocket(socket,streamName)
                 console.log('Balance '+balance);
                 sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             }
-            var x = +10*balance*localOpenPrice/(-500 - 0.0025*balance);
-            console.log('x '+x);
-            if(closingPrice<=x)
-            {
-                console.log("buy order close stop loss "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                buyOrders.splice(index,1);
-                balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
-                console.log('Balance '+balance);
-                sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
-            }
-            
         });
         sellOrders.forEach(function(item,index){ 
             var localOpenPrice = item.openPrice;
@@ -412,17 +400,6 @@ function startWebSocket(socket,streamName)
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 sellOrders.splice(index,1); 
                 balance = balance*10*((localOpenPrice / closingPrice) - 1 - 0.00075) + balance;
-                console.log('Balance '+balance);
-                sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
-            }
-            var x = 10*balance*localOpenPrice/(-500 + 10.0075*balance);
-            console.log('x '+x);
-            if(closingPrice>=x)
-            {
-                console.log("sell order close stop loss "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                sellOrders.splice(index,1);
-                balance = balance*10*((localOpenPrice / closingPrice)-1-0.00075) + balance;
                 console.log('Balance '+balance);
                 sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
             }
