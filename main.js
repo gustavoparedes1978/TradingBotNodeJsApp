@@ -352,9 +352,10 @@ function startWebSocket(socket,streamName)
                 console.log("low "+low);
                 lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
                 console.log("closePrice "+lowestATRFractionSellTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                /*buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":closingPrice});
+                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});*/
+                sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
                 limitNumberBuyingOrders++;
             }
             prom = (high-low)/20;
@@ -366,9 +367,10 @@ function startWebSocket(socket,streamName)
                 console.log("low "+low);
                 lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
                 console.log("closePrice "+lowestATRFractionSellTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                /*buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":closingPrice});
+                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});*/
+                sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
                 limitNumberBuyingOrders++;
             }
         }
@@ -386,7 +388,7 @@ function startWebSocket(socket,streamName)
                 buyOrders.splice(index,1);
                 balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
                 console.log('Balance '+balance);
-                sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
+                
             }
         });
         sellOrders.forEach(function(item,index){ 
