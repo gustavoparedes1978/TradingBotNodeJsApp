@@ -352,10 +352,9 @@ function startWebSocket(socket,streamName)
                 console.log("low "+low);
                 lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
                 console.log("closePrice "+lowestATRFractionSellTwo);
-                /*buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});*/
-                sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
+                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
                 limitNumberBuyingOrders++;
             }
             prom = (high-low)/20;
@@ -367,9 +366,9 @@ function startWebSocket(socket,streamName)
                 console.log("low "+low);
                 lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
                 console.log("closePrice "+lowestATRFractionSellTwo);
-                /*buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
                 sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});*/
+                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
                 sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
                 limitNumberBuyingOrders++;
             }
@@ -408,6 +407,17 @@ function startWebSocket(socket,streamName)
         });
         if(currentDate>currentCloseTime)
         {
+            buyOrders.forEach(function(item,index){
+                var localOpenPrice = item.openPrice;
+                var localClosePrice = item.closePrice;
+                sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
+                buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
+                console.log("buy order close "+closingPrice+" "+date);
+                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                buyOrders.splice(index,1);
+                //balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
+                console.log('Balance '+balance);
+            });
             if(currentCloseTime!==0){readyForTradingFraction = true;}
             currentCloseTime = candle.k.T;
             loadDataWebSocket();
