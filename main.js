@@ -114,12 +114,10 @@ var currentCloseTime = 0;
 var readyForTradingFraction = false;
 
 var buyingAttempts = 0;
-var limitNumberBuyingOrders = 0;
 var lowestBuyingAttempts = 0;
 var buyOrders = [];
 
 var sellingAttempts = 0;
-var limitNumberSellingOrders = 0;
 var lowestSellingAttempts = 0;
 var sellOrders = [];
 
@@ -131,12 +129,130 @@ var streamName = symbolStream+stream;
 
 var balance = 20000;
 var lastClosingPrice = 0;
+var lastBreakPoint = 0;
 
 var W3CWebSocket = require('websocket').w3cwebsocket;
 
 var socket = new W3CWebSocket("wss://stream.binance.com:9443/ws/"+streamName);
 //let socket = new WebSocket("wss://stream.binance.com:9443/ws/"+streamName);
 startWebSocket(socket,streamName);
+
+function preprocess_data(data, reversalType, reversalValue){
+
+    var trends = new Array();
+
+    console.log('data.length '+data.length);
+    // Initialize the output data
+    var output_data = [];
+
+    var counter = 0;
+    var trend;
+    var j = 0;
+
+    // Pushing the first data point as first day's close
+    output_data.push({x:0,close:data[0].close,date:data[0].date});
+
+    var broke_at = 0;
+
+    // Make a copy of the data set to work upon.
+    var temp_array = data.slice();
+
+    // Figure out the "initial trend" in data to figure out the direction, thickness, color of line etc
+    for(var k=1;k<temp_array.length;k++){
+        var diff = temp_array[k].close - temp_array[k-1].close;
+        if (diff>0){
+            trend = '+';
+            broke_at = k;
+            break;
+        }else if(diff<0){
+            trend = '-';
+            broke_at = k;
+            break;
+        }else{
+            continue;
+        }
+    }
+
+    // The first trend is initialized in the trends array based on the above iteration.
+    trends[0] = trend;
+
+    // We will slice the dataset from the value of the first change in trend above.
+    var data = data.slice(broke_at-1);
+
+    // Initializing the last_close variable to that of the dataset's first datapoint.
+    var last_close = data[0].close;
+
+    // Now the magic!
+    for(var i=1; i<data.length; i++){
+       var diff = data[i].close - last_close;
+
+       if (diff>0){
+            trend = '+'; // It is positive
+       }else if(diff<0){
+            trend = '-'; // It is negative
+       }else if(diff==0){
+            trend = trends[i-i]; // Values seem equal. Continue the previous trend.
+       }
+
+       // Set current trend to that of calculated above.
+       trends[i] = trend;
+
+       var value_to_compare = 0;
+       if(reversalType==="diff"){
+           value_to_compare = diff; // If reversalType is difference then just have to compare the change in value
+       }else{
+           value_to_compare = diff/last_close * 100; // If reversalType is pct then compute the change in value and compare
+       }
+       
+       // If the absolute value of change (be it difference or percentage) is greater than the configured reversal_value
+       if (Math.abs(value_to_compare) >= reversalValue){
+           // means there is a change in trend. time to move along the x axis
+           if(trends[i] != trends[i-1]){
+               counter = counter+1;
+               // Push the last_close at the new x position so a |_| or |-| kind of graph.
+               output_data.push({x:counter,close:last_close,date:data[i].date});
+               // Push the new close at the new x position
+               output_data.push({x:counter,close:data[i].close,date:data[i].date});
+           }
+           // means there is no change in trend. time to move along the y axis (upward or downward)
+           else{
+                if(trends[i]=='+' && data[i].close>data[i-1].close){
+                    output_data.push({x:counter,close:data[i].close,date:data[i].date});
+                }
+                else if(trends[i]=='-' && data[i].close < data[i-1].close){
+                    output_data.push({x:counter,close:data[i].close,date:data[i].date});
+                }
+            }
+           last_close = data[i].close;
+           j=0;
+       }else{
+            if(trends[i]==trends[i-1]){
+                // If the trend is the same and the last_close values are conforming to the trend, then
+                // push to output_data in a way that it extends along the y axis on the same x axis point (counter).
+                if(trends[i]=='+' && data[i].close>data[i-1].close){
+                    output_data.push({x:counter,close:data[i].close,date:data[i].date});
+                }
+                else if(trends[i]=='-' && data[i].close < data[i-1].close){
+                    output_data.push({x:counter,close:data[i].close,date:data[i].date});
+                }
+                // Safe to set the last_close here as it is an actual point added to output_data.
+                last_close = data[i].close;
+                // Reset the interim j variable to 0
+                // Means the original dataset and output_data set are back in sync.
+                j=0;
+            }else{
+                // This is to ignore minor variations in the stock values. We reset the last_close and current trend
+                // every time this piece of code gets executed.
+                // In Kagi charts, minor fluctuations are ignored while plotting.
+                // The output_data set and the original dataset are out of sync till j != 0.
+                last_close = data[i-1-j].close;
+                trends[i] = trends[i-1-j];
+                j+=1;
+            }
+        }
+    }
+    return output_data;
+}
 
 function loadDataWebSocket()
 {
@@ -191,6 +307,11 @@ function loadDataWebSocket()
                     var object = {'close':close,'date':formattedDate};
                     data.push(object);
                 }
+                
+            var preprocess_data_result = preprocess_data(data, "diff", ATR_SMAs_Array[0]);
+            var lastObject = preprocess_data_result.length-1;
+            lastBreakPoint = preprocess_data_result[lastObject].close;
+            
             //drawChart(data,ATR_SMAs_Array[0]);
 
             //RMA exponential moving average with alpha = 1/length
@@ -314,67 +435,89 @@ function startWebSocket(socket,streamName)
         {
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            if(prom>=lowestATRhalf&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
+            if(prom>=lowestATRhalf&&diffBuyingAttempts>diffSellingAttempts&&sellOpenOrderFractionBoolean) 
             {
-                console.log("sell order open on buy "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                console.log("high "+high);
-                lowestATRFractionBuyTwo = closingPrice - lowestATR*0.15;
-                console.log("closePrice "+lowestATRFractionBuyTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
-                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
-                sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
-                limitNumberSellingOrders++;
+                if(closingPrice<lastBreakPoint)
+                {
+                    console.log("sell order open on buy "+closingPrice+" "+date);
+                    console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                    console.log("high "+high);
+                    lowestATRFractionBuyTwo = closingPrice - lowestATR*0.15;
+                    console.log("closePrice "+lowestATRFractionBuyTwo);
+                    buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
+                    sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
+                    sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
+                }
+                else
+                {
+                    console.log("sell order open on buy not allowed");
+                }
             }
             prom = (high-low)/20;
             lowestATRhalf = lowestATR/20;
-            if(prom>=lowestATRhalf&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean&&limitNumberSellingOrders<1) 
+            if(prom>=lowestATRhalf&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean) 
             {
-                console.log("sell order open "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                console.log("high "+high);
-                lowestATRFractionBuyTwo = closingPrice - lowestATR*0.15;
-                console.log("closePrice "+lowestATRFractionBuyTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
-                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
-                sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
-                limitNumberSellingOrders++;
+                if(closingPrice<lastBreakPoint)
+                {
+                    console.log("sell order open "+closingPrice+" "+date);
+                    console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                    console.log("high "+high);
+                    lowestATRFractionBuyTwo = closingPrice - lowestATR*0.15;
+                    console.log("closePrice "+lowestATRFractionBuyTwo);
+                    buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
+                    sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
+                    sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
+                }
+                else
+                {
+                    console.log("sell order open not allowed");
+                }
             }
         }
         if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction)
         {
             prom = (high-low)/10;
             lowestATRhalf = lowestATR/10;
-            if(prom>=lowestATRhalf&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<1)
+            if(prom>=lowestATRhalf&&diffBuyingAttempts<diffSellingAttempts&&buyOpenOrderFractionBoolean)
             {
-                console.log("buy order open on sell "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                console.log("low "+low);
-                lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
-                console.log("closePrice "+lowestATRFractionSellTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
-                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
-                limitNumberBuyingOrders++;
+                if(closingPrice>lastBreakPoint)
+                {
+                    console.log("buy order open on sell "+closingPrice+" "+date);
+                    console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                    console.log("low "+low);
+                    lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
+                    console.log("closePrice "+lowestATRFractionSellTwo);
+                    buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                    sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
+                    buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
+                }
+                else
+                {
+                    console.log("buy order open on sell not allowed");
+                }
             }
             prom = (high-low)/20;
             lowestATRhalf = lowestATR/20;
-            if(prom>=lowestATRhalf&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean&&limitNumberBuyingOrders<1)
+            if(prom>=lowestATRhalf&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean)
             {
-                console.log("buy order open "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                console.log("low "+low);
-                lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
-                console.log("closePrice "+lowestATRFractionSellTwo);
-                buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
-                sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
-                buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
-                sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
-                limitNumberBuyingOrders++;
+                if(closingPrice>lastBreakPoint)
+                {
+                    console.log("buy order open "+closingPrice+" "+date);
+                    console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
+                    console.log("low "+low);
+                    lowestATRFractionSellTwo = closingPrice + lowestATR*0.15;
+                    console.log("closePrice "+lowestATRFractionSellTwo);
+                    buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = true;
+                    sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
+                    buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
+                    sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
+                }
+                else
+                {
+                    console.log("buy order open not allowed");
+                }
             }
         }
-        if(limitNumberSellingOrders===1){limitNumberBuyingOrders=0;}
-        if(limitNumberBuyingOrders===1){limitNumberSellingOrders=0;}
         buyOrders.forEach(function(item,index){
             var localOpenPrice = item.openPrice;
             var localClosePrice = item.closePrice;
@@ -385,7 +528,7 @@ function startWebSocket(socket,streamName)
                 console.log("buy order close "+closingPrice+" "+date);
                 console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
                 buyOrders.splice(index,1);
-                //balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
+                balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
                 console.log('Balance '+balance);
             }
         });
@@ -406,24 +549,11 @@ function startWebSocket(socket,streamName)
         });
         if(currentDate>currentCloseTime)
         {
-            buyOrders.forEach(function(item,index){
-                var localOpenPrice = item.openPrice;
-                var localClosePrice = item.closePrice;
-                sellOpenOrderFractionBoolean = true; sellCloseOrderFractionBoolean = false;
-                buyOpenOrderFractionBoolean = true; buyCloseOrderFractionBoolean = false;
-                console.log("buy order close "+closingPrice+" "+date);
-                console.log("diffBuyingAttempts "+diffBuyingAttempts+" diffSellingAttempts "+diffSellingAttempts);
-                buyOrders.splice(index,1);
-                //balance = balance*10*(1 - (localOpenPrice / closingPrice) - 0.00075) + balance;
-                console.log('Balance '+balance);
-            });
             if(currentCloseTime!==0){readyForTradingFraction = true;}
             currentCloseTime = candle.k.T;
             loadDataWebSocket();
             lastClosingPrice = parseFloat(candle.k.c);
             sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
-            limitNumberBuyingOrders=0;
-            limitNumberSellingOrders=0;
         }
     };
     socket.onclose = function(event) {
