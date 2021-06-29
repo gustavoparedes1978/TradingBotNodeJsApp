@@ -448,10 +448,6 @@ function startWebSocket(socket,streamName)
                     sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
                     sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
                 }
-                else
-                {
-                    console.log("sell order open on buy not allowed");
-                }
             }
             prom = (high-low)/20;
             lowestATRhalf = lowestATR/20;
@@ -467,10 +463,6 @@ function startWebSocket(socket,streamName)
                     buyOpenOrderFractionBoolean = false; buyCloseOrderFractionBoolean = false;
                     sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = true;
                     sellOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionBuyTwo});
-                }
-                else
-                {
-                    console.log("sell order open not allowed");
                 }
             }
         }
@@ -491,10 +483,6 @@ function startWebSocket(socket,streamName)
                     sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
                     buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
                 }
-                else
-                {
-                    console.log("buy order open on sell not allowed");
-                }
             }
             prom = (high-low)/20;
             lowestATRhalf = lowestATR/20;
@@ -511,10 +499,6 @@ function startWebSocket(socket,streamName)
                     sellOpenOrderFractionBoolean = false; sellCloseOrderFractionBoolean = false;
                     buyOrders.push({"openPrice":closingPrice,"closePrice":lowestATRFractionSellTwo});
                     sellingAttempts = 0; buyingAttempts = 0; lowestBuyingAttempts = 0; lowestSellingAttempts = 0;
-                }
-                else
-                {
-                    console.log("buy order open not allowed");
                 }
             }
         }
@@ -549,6 +533,7 @@ function startWebSocket(socket,streamName)
         });
         if(currentDate>currentCloseTime)
         {
+            console.log('Balance '+balance+' buyOrders '+buyOrders.length+' sellOrders '+sellOrders.length);
             if(currentCloseTime!==0){readyForTradingFraction = true;}
             currentCloseTime = candle.k.T;
             loadDataWebSocket();
