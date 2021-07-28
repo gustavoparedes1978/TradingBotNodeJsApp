@@ -433,8 +433,8 @@ function startWebSocket(socket,streamName)
         var date = new Date();
         if((closingPriceMinusHigh>=lowestATRFractionMin&&closingPriceMinusHigh<=lowestATRFractionMax)&&readyForTradingFraction)
         {
-            prom = (high-low)/10;
-            lowestATRhalf = lowestATR/10;
+            prom = (high-low)/20;
+            lowestATRhalf = lowestATR/20;
             if(prom>=lowestATRhalf&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean) 
             {
                 if(closingPrice<lastBreakPoint)
@@ -452,8 +452,8 @@ function startWebSocket(socket,streamName)
         }
         if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction)
         {
-            prom = (high-low)/10;
-            lowestATRhalf = lowestATR/10;
+            prom = (high-low)/20;
+            lowestATRhalf = lowestATR/20;
             if(prom>=lowestATRhalf&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean)
             {
                 if(closingPrice>lastBreakPoint)
