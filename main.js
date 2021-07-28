@@ -534,6 +534,18 @@ function startWebSocket(socket,streamName)
         if(currentDate>currentCloseTime)
         {
             console.log('Balance '+balance+' buyOrders '+buyOrders.length+' sellOrders '+sellOrders.length);
+            buyOrders.forEach(function(item,index){
+                var localOpenPrice = item.openPrice;
+                var localClosePrice = item.closePrice;
+                console.log("localOpenPrice "+localOpenPrice);
+                console.log("localClosePrice "+localClosePrice);
+            });
+            sellOrders.forEach(function(item,index){
+                var localOpenPrice = item.openPrice;
+                var localClosePrice = item.closePrice;
+                console.log("localOpenPrice "+localOpenPrice);
+                console.log("localClosePrice "+localClosePrice);
+            });
             if(currentCloseTime!==0){readyForTradingFraction = true;}
             currentCloseTime = candle.k.T;
             loadDataWebSocket();
@@ -568,8 +580,6 @@ function startWebSocket(socket,streamName)
  
  function pingFunction(){
  ping('https://radiant-headland-62259.herokuapp.com')
-  .then(time => console.log(`Response time: ${time} ms`))
-  .catch(() => console.log('Failed to ping'));
  }
  
 pingFunction();
