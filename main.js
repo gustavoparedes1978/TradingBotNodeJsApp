@@ -7,6 +7,26 @@
 var http = require("http");
 var url = require("url");
 var fs = require("fs");
+
+const { Client } = require('pg');
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+client.connect();
+
+client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
+});
+
  
 http.createServer(function (req, res) {
         var q = url.parse(req.url, true);
@@ -433,8 +453,8 @@ function startWebSocket(socket,streamName)
         var date = new Date();
         if((closingPriceMinusHigh>=lowestATRFractionMin&&closingPriceMinusHigh<=lowestATRFractionMax)&&readyForTradingFraction)
         {
-            prom = (high-low)/20;
-            lowestATRhalf = lowestATR/20;
+            prom = (high-low)/50;
+            lowestATRhalf = lowestATR/50;
             if(prom>=lowestATRhalf&&diffSellingAttempts>diffBuyingAttempts&&sellOpenOrderFractionBoolean) 
             {
                 if(closingPrice<lastBreakPoint)
@@ -452,8 +472,8 @@ function startWebSocket(socket,streamName)
         }
         if(closingPriceMinusLow>=lowestATRFractionMin&&closingPriceMinusLow<=lowestATRFractionMax&&readyForTradingFraction)
         {
-            prom = (high-low)/20;
-            lowestATRhalf = lowestATR/20;
+            prom = (high-low)/50;
+            lowestATRhalf = lowestATR/50;
             if(prom>=lowestATRhalf&&diffSellingAttempts<diffBuyingAttempts&&buyOpenOrderFractionBoolean)
             {
                 if(closingPrice>lastBreakPoint)
