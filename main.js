@@ -23,6 +23,14 @@ client.query('INSERT INTO ORDERS (BALANCE,OPENPRICE,CLOSEPRICE,ORDERTYPE,STATUS)
     client.end();
 });
 
+client.query('SELECT * FROM ORDERS', (err, res) => {
+    if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
+});
+
  
 http.createServer(function (req, res) {
         var q = url.parse(req.url, true);
