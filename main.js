@@ -19,7 +19,7 @@ const client = new Client({
 
 client.connect();
 
-client.query('INSERT INTO TABLE_NAME("BALANCE","OPENPRICE","CLOSEPRICE","ORDERTYPE","STATUS")   
+client.query('INSERT INTO ORDERSTABLE ("BALANCE","OPENPRICE","CLOSEPRICE","ORDERTYPE","STATUS")   
     VALUES ("20000.00", "5000.00", "52000.00", "BUY", "OPEN");', (err, res) =>
     if (err) throw err;
     client.end();
