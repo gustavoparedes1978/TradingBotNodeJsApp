@@ -19,12 +19,10 @@ const client = new Client({
 
 client.connect();
 
-client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-  if (err) throw err;
-  for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-  }
-  client.end();
+client.query('INSERT INTO TABLE_NAME("BALANCE","OPENPRICE","CLOSEPRICE","ORDERTYPE","STATUS")   
+    VALUES ("20000.00", "5000.00", "52000.00", "BUY", "OPEN");', (err, res) =>
+    if (err) throw err;
+    client.end();
 });
 
  
