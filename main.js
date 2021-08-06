@@ -8,33 +8,6 @@ var http = require("http");
 var url = require("url");
 var fs = require("fs");
 
-const { Client } = require('pg');
-
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-
-client.connect();
-
-client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-  if (err) throw err;
-  for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-  }
-  client.end();
-});
-
-client.query('SELECT * FROM ORDERS;', (err, res) => {
-  for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-  }
-  client.end();
-});
-
- 
 http.createServer(function (req, res) {
         var q = url.parse(req.url, true);
         //console.log(q.pathname);
