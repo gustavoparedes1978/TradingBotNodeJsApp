@@ -24,7 +24,6 @@ client.query('INSERT INTO ORDERS (BALANCE,OPENPRICE,CLOSEPRICE,ORDERTYPE,STATUS)
 });
 
 client.query('SELECT * FROM ORDERS;', (err, res) => {
-    if (err) throw err;
   for (let row of res.rows) {
     console.log(JSON.stringify(row));
   }
