@@ -237,7 +237,7 @@ class Bot
 						const config = { host: '10.79.160.2', schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' };
 						const myPromise = new Promise(function(resolve, reject) 
 						{
-							mysqlx.getSession({ user: config.user, password: config.passwd }).then(session =>
+							mysqlx.getSession({ host: config.host, user: config.user, password: config.passwd }).then(session =>
 							{
 								const table = session.getSchema(config.schema).getTable(config.table);
 								if(operation==="insert")
@@ -1206,7 +1206,7 @@ class Initializer
 					const config = { host: '10.79.160.2', schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' };
 					const myPromise = new Promise(function(resolve, reject) 
 					{
-						mysqlx.getSession({ user: config.user, password: config.passwd }).then(session =>
+						mysqlx.getSession({ host: config.host, user: config.user, password: config.passwd }).then(session =>
 						{
 							const table = session.getSchema(config.schema).getTable(config.table);
 							if(operation==="insert")
