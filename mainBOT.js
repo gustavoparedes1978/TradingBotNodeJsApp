@@ -236,9 +236,10 @@ class Bot
 						const mysqlx = require('@mysql/xdevapi');
 						const config = { host:'10.79.160.2',schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' },
 									   { pooling: { enabled: true, maxIdleTime: 30000, maxSize: 25, queueTimeout: 10000 } };
+						var client = mysqlx.getClient(config);
 						const myPromise = new Promise(function(resolve, reject) 
 						{
-							mysqlx.getSession({ host: config.host, user: config.user, password: config.passwd }).then(session =>
+							client.getSession().then(session =>
 							{
 								const table = session.getSchema(config.schema).getTable(config.table);
 								if(operation==="insert")
@@ -1205,10 +1206,11 @@ class Initializer
 				{
 					const mysqlx = require('@mysql/xdevapi');
 					const config = { host:'10.79.160.2',schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' },
-								   { pooling: { enabled: true, maxIdleTime: 30000, maxSize: 25, queueTimeout: 10000 } };
+									   { pooling: { enabled: true, maxIdleTime: 30000, maxSize: 25, queueTimeout: 10000 } };
+					var client = mysqlx.getClient(config);
 					const myPromise = new Promise(function(resolve, reject) 
 					{
-						mysqlx.getSession({ host: config.host, user: config.user, password: config.passwd }).then(session =>
+						client.getSession().then(session =>
 						{
 							const table = session.getSchema(config.schema).getTable(config.table);
 							if(operation==="insert")
