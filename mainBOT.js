@@ -234,7 +234,7 @@ class Bot
 				var SQL = async function(symbol,info,table,column,operation,allowedToTrade)
 					{
 						const mysqlx = require('@mysql/xdevapi');
-						const config = { schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' };
+						const config = { host:'34.122.44.195', port:'3306',schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' };
 						const myPromise = new Promise(function(resolve, reject) 
 						{
 							mysqlx.getSession({ user: config.user, password: config.passwd }).then(session =>
@@ -1203,7 +1203,7 @@ class Initializer
 			var SQL = async function(symbol,info,table,column,operation,allowedToTrade)
 				{
 					const mysqlx = require('@mysql/xdevapi');
-					const config = { schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' };
+					const config = { host:'34.122.44.195', port:'3306',schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' };
 					const myPromise = new Promise(function(resolve, reject) 
 					{
 						mysqlx.getSession({ user: config.user, password: config.passwd }).then(session =>

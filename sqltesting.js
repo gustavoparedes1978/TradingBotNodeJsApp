@@ -1,7 +1,9 @@
+
+
 var SQL = async function(symbol,info,operation)
 {
 	const mysqlx = require('@mysql/xdevapi');
-	const config = { schema: 'BOT', table: 'balances', user: 'root', passwd:'GaPo2030$$$1978' };
+	const config = {schema: 'BOT', table: 'balances', user: 'root', passwd:'GaPo2030$$$1978'};
 	const myPromise = new Promise(function(resolve, reject) {
 		mysqlx.getSession({ user: config.user, password: config.passwd }).then(session =>{
 			const table = session.getSchema(config.schema).getTable(config.table);
