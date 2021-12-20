@@ -235,7 +235,7 @@ class Bot
 					{
 						// passwd:'GaPo2030$$$1978'
 						const mysqlx = require('@mysql/xdevapi');
-						const config = { host: 10.79.160.2,schema: 'BOT', user: 'root',
+						const config = { host: '10.79.160.2',schema: 'BOT', user: 'root',
 										 pooling: { enabled: true, maxIdleTime: 30000, maxSize: 25, queueTimeout: 10000 } };
 						var client = mysqlx.getClient(config);
 						const myPromise = new Promise(function(resolve, reject) 
@@ -1207,7 +1207,7 @@ class Initializer
 				{
 					// passwd:'GaPo2030$$$1978'
 					const mysqlx = require('@mysql/xdevapi');
-					const config = { host: 10.79.160.2,schema: 'BOT', user: 'root', 
+					const config = { host: '10.79.160.2',schema: 'BOT', user: 'root', 
 									pooling: { enabled: true, maxIdleTime: 30000, maxSize: 25, queueTimeout: 10000 } };
 					var client = mysqlx.getClient(config);
 					const myPromise = new Promise(function(resolve, reject) 
