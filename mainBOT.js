@@ -233,16 +233,13 @@ class Bot
 					
 				var SQL = async function(symbol,info,table,column,operation,allowedToTrade)
 					{
-						// passwd:'GaPo2030$$$1978'
 						const mysqlx = require('@mysql/xdevapi');
-						const config = { host: 'localhost',schema: 'bot', user: 'root',
-										 pooling: { enabled: true, maxIdleTime: 30000, maxSize: 25, queueTimeout: 10000 } };
-						var client = mysqlx.getClient(config);
+						const config = { schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' };
 						const myPromise = new Promise(function(resolve, reject) 
 						{
-							client.getSession().then(session =>
+							mysqlx.getSession({ user: config.user, password: config.passwd }).then(session =>
 							{
-								const table = session.getSchema(config.schema).getTable(table);
+								const table = session.getSchema(config.schema).getTable(config.table);
 								if(operation==="insert")
 								{
 									table.insert('symbol', column)
@@ -1205,16 +1202,13 @@ class Initializer
 		{
 			var SQL = async function(symbol,info,table,column,operation,allowedToTrade)
 				{
-					// passwd:'GaPo2030$$$1978'
 					const mysqlx = require('@mysql/xdevapi');
-					const config = { host: 'localhost',schema: 'bot', user: 'root', 
-									pooling: { enabled: true, maxIdleTime: 30000, maxSize: 25, queueTimeout: 10000 } };
-					var client = mysqlx.getClient(config);
+					const config = { schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' };
 					const myPromise = new Promise(function(resolve, reject) 
 					{
-						client.getSession().then(session =>
+						mysqlx.getSession({ user: config.user, password: config.passwd }).then(session =>
 						{
-							const table = session.getSchema(config.schema).getTable(table);
+							const table = session.getSchema(config.schema).getTable(config.table);
 							if(operation==="insert")
 							{
 								table.insert('symbol', column)
