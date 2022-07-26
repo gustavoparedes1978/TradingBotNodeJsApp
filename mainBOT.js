@@ -15,7 +15,7 @@ class Bot
 
 					switch(filename) {
 						case "/":
-							template = "./public/index.html";
+							template = "./public/index.html"
 							mimeType = "text/html";
 							break;
 						case "/css/style.css":
@@ -231,126 +231,6 @@ class Bot
 						return await myPromise;
 					}
 					
-				var SQL = async function(symbol,info,table,column,operation,allowedToTrade)
-					{
-						const mysqlx = require('@mysql/xdevapi');
-						const config = { schema: 'BOT', table: table, user: 'root', passwd:'GaPo2030$$$1978' };
-						const myPromise = new Promise(function(resolve, reject) 
-						{
-							mysqlx.getSession({ user: config.user, password: config.passwd }).then(session =>
-							{
-								const table = session.getSchema(config.schema).getTable(config.table);
-								if(operation==="insert")
-								{
-									table.insert('symbol', column)
-										.values(symbol,info)
-										.execute()
-										.then(() => {
-											resolve(true);
-										})
-										.then(() => {
-											return session.close();
-										})
-										.catch (function (err) {
-											console.log('Insert error: ' + err.message + ' '+symbol);
-											resolve(false);
-										});
-								}
-								if(operation==="update")
-								{
-									table.update()
-										.where('symbol = :symbol')
-										.bind('symbol',symbol)
-										.set(column,info)
-										.execute()
-										.then(() => {
-											resolve(true);
-										})
-										.then(() => {
-											return session.close();
-										})
-										.catch (function (err) {
-											console.log('Update error: ' + err.message + ' '+symbol);
-											resolve(false);
-										});
-								}
-								if(operation==="delete")
-								{
-									table.delete()
-										.where('symbol = :symbol')
-										.bind('symbol',symbol)
-										.execute()
-										.then(() => {
-											resolve(true);
-										})
-										.then(() => {
-											return session.close();
-										})
-										.catch (function (err) {
-											console.log('Delete error: ' + err.message + ' '+symbol);
-											resolve(false);
-										});	
-								}
-								if(operation==="select")
-								{
-									table.select(column)
-										.where('symbol = :symbol')
-										.bind('symbol',symbol)
-										.execute()
-										.then((res) => {
-											info = res.fetchAll();
-											resolve(info);
-										})
-										.then(() => {
-											return session.close();
-										})
-										.catch (function (err) {
-											console.log('Select error: ' + err.message + ' ' +symbol);
-											resolve(info);
-										});
-								}
-								if(operation==="reset")
-								{
-									table.update()
-										.where('true')
-										.set('allowedToTrade',false)
-										.execute()
-										.then(() => {
-											resolve(true);
-										})
-										.then(() => {
-											return session.close();
-										})
-										.catch (function (err) {
-											console.log('Reset error: ' + err.message + ' '+symbol);
-											resolve(false);
-										});
-								}
-								if(operation==="switch")
-								{
-									table.update()
-										.where('symbol = :symbol')
-										.bind('symbol',symbol)
-										.set('allowedToTrade',allowedToTrade)
-										.execute()
-										.then(() => {
-											resolve(true);
-										})
-										.then(() => {
-											return session.close();
-										})
-										.catch (function (err) {
-											console.log('Switch error: ' + err.message + ' '+symbol);
-											resolve(false);
-										});
-								}
-							
-							}).catch (function (err) {
-								console.log('Database error: ' + err.message + ' '+symbol);
-							});
-						});
-						return await myPromise;
-					}
 					
 				var managingOrdersBinance = async function(symbol,info,command)
 					{
@@ -494,166 +374,6 @@ class Bot
 									resolve(response);
 								}
 								
-							});
-							return await myPromise;
-						}
-						
-						var limitTwoFunc = async function(res)
-						{
-							var booleanLimitOne = Boolean(res.booleanLimitOne);
-							var exchangeInfoVar = Object(res.exchangeInfoVar);
-							var booleanLimitTwo = false;
-							
-							const myPromise = new Promise(function(resolve, reject) 
-							{
-								if(booleanLimitOne)
-								{
-									var localQuantity = Number(exchangeInfoVar.quantity);
-									var localClosePrice = Number(exchangeInfoVar.closePrice);
-									var localSide2 = String(exchangeInfoVar.localSide2);
-							
-									var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-									var xhttpRequest = new XMLHttpRequest();
-									
-									xhttpRequest.onreadystatechange = function() 
-									{
-										if (this.readyState === 4 && this.status === 200) 
-										{
-											console.log('limitTwoFunc '+this.responseText);
-											var jsonResponse = JSON.parse(this.responseText); 
-											if(Object.keys(jsonResponse).length!==0)
-											{
-												console.log(jsonResponse.code+' '+jsonResponse.msg);
-												booleanLimitTwo = false;
-												var response = {'booleanLimitOne':booleanLimitOne,'exchangeInfoVar':exchangeInfoVar}
-												resolve(response);
-											}
-											else
-											{
-												booleanLimitTwo = true;
-												var response = {'booleanLimitOne':booleanLimitOne,'exchangeInfoVar':exchangeInfoVar}
-												resolve(response);
-											}
-										}											
-									};
-									
-									xhttpRequest.onerror = function(error)
-									{
-										console.log('LIMIT2 error '+error+' '+symbol);
-										var response = {'booleanLimitTwo':booleanLimitTwo,'exchangeInfoVar':exchangeInfoVar}
-										resolve(response);
-									};
-									
-									var pathVar = '/tradingbot/testNewOrder?symbol='+symbol+'&side='+localSide2+'&type=LIMIT&timeInForce=GTC&quantity='+localQuantity+'&price='+localClosePrice;
-									
-									xhttpRequest.open("GET","http://localhost:8090"+pathVar);
-									xhttpRequest.send();
-								}
-								else
-								{	
-									var response = {'booleanLimitTwo':booleanLimitTwo,'exchangeInfoVar':exchangeInfoVar}
-									resolve(response);
-								}
-							});
-							return await myPromise;
-						}
-
-						var stopLossFunc = async function(res) 
-						{
-							var booleanLimitTwo = Boolean(res.booleanLimitTwo);
-							var exchangeInfoVar = Object(res.exchangeInfoVar);
-							var localOpenPrice = Number(exchangeInfoVar.openPrice);
-							var counterPrecision = Number(exchangeInfoVar.counterPrecision);
-							var localQuantity = Number(exchangeInfoVar.quantity);
-							var localBreakPoint = Number(exchangeInfoVar.breakPoint);
-							var localOrderType = String(exchangeInfoVar.orderType);
-							
-							const myPromise = new Promise(function(resolve, reject) 
-							{
-								if(booleanLimitTwo)
-									{
-										var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-										var xhttpRequest = new XMLHttpRequest();
-										
-										var price = 0; var localStopSide = "";
-										if(localOrderType==="buyOrder"){localStopSide="SELL";}
-										if(localOrderType==="sellOrder"){localStopSide="BUY";}
-											
-										price = 2*localBreakPoint-localOpenPrice;
-										price = price.toFixed(counterPrecision);
-										price = Number(price);
-						
-										xhttpRequest.onreadystatechange = function() 
-											{
-												if (this.readyState === 4 && this.status === 200) 
-												{
-													console.log('stopLossFunc '+this.responseText);
-													var jsonResponse = JSON.parse(this.responseText); 
-													if(Object.keys(jsonResponse).length!==0)
-													{
-														console.log(jsonResponse.code+' '+jsonResponse.msg);
-														resolve(false);
-													}
-													else
-													{
-														resolve(true);
-													}
-												}											
-											};
-							
-										xhttpRequest.onerror = function(error)
-											{
-												console.log('STOPLOSSLIMIT error '+symbol);
-												resolve(false);
-											};
-											
-										var pathVar='/tradingbot/testNewOrder?symbol='+symbol+'&side='+localStopSide+'&type=LIMIT&timeInForce=GTC&quantity='+localQuantity+'&price='+price;
-						
-										xhttpRequest.open("GET","http://localhost:8090"+pathVar);
-										xhttpRequest.send();
-									}
-								else
-									{
-										resolve(false);
-									}										
-							});
-							return await myPromise;
-						}
-						
-						var cancelOpenOrdersFunc = async function(res)
-						{
-							var booleanStopLossLimit = Boolean(res);
-							
-							const myPromise = new Promise(function(resolve, reject) 
-							{
-								if(!booleanStopLossLimit)
-								{
-									
-									var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-									var xhttpRequest = new XMLHttpRequest();
-								
-									xhttpRequest.onreadystatechange = function() 
-										{
-											if (this.readyState === 4 && this.status === 200) 
-											{
-												console.log('CANCELALLOPENORDERS success '+symbol);
-												resolve(false);
-											}											
-										};
-							
-									xhttpRequest.onerror = function(error)
-										{
-											console.log('CANCELALLOPENORDERS error');
-											resolve(false);
-										};
-							
-									xhttpRequest.open("GET","http://localhost:8090/tradingbot/cancelAllOpenOrders?symbol="+symbol);
-									xhttpRequest.send();
-								}
-								else
-								{
-									resolve(true);
-								}
 							});
 							return await myPromise;
 						}
@@ -901,7 +621,7 @@ class Bot
 																{
 																	sellOrderPlacement = closingPrice - lowestATR*percentage;
 																	testingBalance = balance*((closingPrice/sellOrderPlacement) - 1 - 0.00075) + balance;
-																	percentage+=0.3;
+																	percentage += 0.15;
 																}
 																if(testingBalance>balance)
 																{
@@ -935,7 +655,7 @@ class Bot
 																{
 																	buyOrderPlacement = closingPrice + lowestATR*percentage;
 																	testingBalance = balance*((buyOrderPlacement/closingPrice) - 1 - 0.00075) + balance;
-																	percentage+=0.15;
+																	percentage += 0.15;
 																}
 																if(testingBalance>balance)
 																{
@@ -1008,29 +728,6 @@ class Bot
 												numberAttempts++;
 												if(numberAttempts<=10)
 												{
-													var testingBalance = 0;
-													var buyOrderPlacement = 0;
-													var percentage = 0.15;
-													while(testingBalance<lastBalance)
-													{
-														buyOrderPlacement = closingPrice + currentATR*percentage;
-														testingBalance = lastBalance*((buyOrderPlacement/closingPrice) - 1 - 0.00075) + lastBalance;
-														percentage+= 0.15;
-													}
-													var localBreakPoint = currentBreakPoint + (4/5)*(closingPrice-currentBreakPoint);
-													if(testingBalance>lastBalance)
-													{	
-														var info = {"symbol":currentSymbol,"openPrice":closingPrice,"closePrice":sellOrderPlacement,"breakPoint":localBreakPoint,"ATR":currentATR,"percentage":percentage,"balance":lastBalance,"orderType":"sellOrder","numberAttempts":numberAttempts};
-														managingOrdersBinance(symbol,info,"insertOrder").then((success) => {
-																var successfulOrder = Boolean(success);
-																if(successfulOrder)
-																	{
-																		SQL(currentSymbol,info,'orders','info','update',false);
-																		buyOrders.push(info);
-																		resolve({"balance":balance});
-																	}															
-																});
-													}
 													var testingBalance = 0;
 													var sellOrderPlacement = 0;
 													var percentage = 0.15;

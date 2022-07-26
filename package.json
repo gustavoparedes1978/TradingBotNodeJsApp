@@ -12,7 +12,6 @@
     "contributors": [],
     "dependencies": {
         "@mysql/xdevapi": "8.0.26",
-        "pm2": "^5.1.2",
         "websocket": "^1.0.34",
         "xmlhttprequest": "^1.8.0"
     }

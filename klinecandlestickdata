@@ -1,0 +1,97 @@
+var lastKlineData = async function(res)
+	{
+		var jsonResponse = {};
+		
+		const myPromise = new Promise(function(resolve, reject) 
+		{
+			var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+			var xhttpRequest = new XMLHttpRequest();
+										
+			xhttpRequest.onreadystatechange = function() 
+			{
+				var status = this.status;
+				var readyState = this.readyState;
+				
+				if (readyState === 4 && (status === 0 || (status >= 200 && status < 400))) 
+				{
+					console.log('orderingFunc true '+symbol+' '+this.responseText);
+					var booleanResponse = true;
+					try{
+						JSON.parse(this.responseText);
+					}
+					catch (e)
+					{
+						booleanResponse = false;
+						console.log('orderingFunc catcherror');
+						console.log(e+' symbol');
+					}
+					finally
+					{
+						if(booleanResponse){jsonResponse = JSON.parse(this.responseText);}
+						var code = jsonResponse.code;
+						
+						var localExchangeInfoVar = {};
+							
+						localExchangeInfoVar.openPrice = Number(localOpenPrice);
+						localExchangeInfoVar.closePrice = Number(localClosePrice);
+						localExchangeInfoVar.breakPoint = Number(localBreakPoint);
+						localExchangeInfoVar.quantity = Number(localQuantity);
+						localExchangeInfoVar.orderType = String(localOrderType);
+						
+						if(typeof code === "undefined")
+						{
+							var response = {};
+							var jsonResponseStatus = String(jsonResponse.status);
+							console.log(jsonResponseStatus);
+									
+							if(jsonResponseStatus==="EXPIRED")
+							{
+								resolve({'booleanExchangeInfo':false,'exchangeInfoVar':localExchangeInfoVar}); 
+							}
+							else
+							{
+								resolve({'booleanExchangeInfo':true,'exchangeInfoVar':localExchangeInfoVar});
+							}	
+						}
+						else
+						{	
+							resolve({'booleanExchangeInfo':false,'exchangeInfoVar':localExchangeInfoVar});
+						}
+					}
+				}
+				
+			};
+				
+			xhttpRequest.onerror = function(error)
+			{
+				console.log('orderingFunc onerror');
+				var localExchangeInfoVar = {};
+							
+				localExchangeInfoVar.openPrice = Number(localOpenPrice);
+				localExchangeInfoVar.closePrice = Number(localClosePrice);
+				localExchangeInfoVar.breakPoint = Number(localBreakPoint);
+				localExchangeInfoVar.quantity = Number(localQuantity);
+				localExchangeInfoVar.orderType = String(localOrderType);
+				
+				var jsonResponse = {};
+				resolve(jsonResponse);
+			};
+			
+			var counterPrecision = Number(exchangeInfoVar.counterPrecision);
+			var localQuantity = Number(exchangeInfoVar.quantity);
+			
+			var pathVar = '/tradingbot/newMarketOrder?symbol='+symbol+'&side='+localSide1+'&positionSide='+positionSide1+'&type=MARKET&quantity='+localQuantity;
+		
+			xhttpRequest.ontimeout = function (e) 
+			{
+				var jsonResponse = {};
+				resolve(jsonResponse);
+			};
+			
+			xhttpRequest.open("GET","http://localhost:8091"+pathVar,true);
+			xhttpRequest.timeout = 2000;
+			xhttpRequest.send();
+		});
+
+		return await myPromise;
+	}

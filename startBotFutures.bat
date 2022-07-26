@@ -1,0 +1,1 @@
+node mainBOTfutures.js > mainBOTfuturesOUT.log 2> mainBOTfuturesERR.log
